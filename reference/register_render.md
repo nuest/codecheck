@@ -42,6 +42,11 @@ register_render(
 
   Path to the venues.csv file containing venue names and labels
 
+- codecheck_repo_path:
+
+  Optional path to the codecheck package repository for build metadata
+  (default: NULL)
+
 - from:
 
   The first register entry to check

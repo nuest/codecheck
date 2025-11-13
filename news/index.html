@@ -46,15 +46,27 @@
 <li>
 <strong>Breadcrumb navigation</strong>: All register pages now include breadcrumb navigation at the top, enabling easy navigation from detail pages back to overview pages. Breadcrumbs show hierarchical paths (e.g., CODECHECK Register &gt; Venues &gt; Journals &gt; GigaScience) with clickable links to parent pages (addresses codecheckers/register#108)</li>
 <li>
+<strong>JSON data export for certificates</strong>: Certificate landing pages now include an <code>index.json</code> file containing all metadata displayed on the page in machine-readable format. The JSON structure includes certificate details, paper information (title, authors with ORCID, reference, abstract), and CODECHECK details (codecheckers with ORCID, check time, repository, report, type, venue, summary, manifest). A link to the JSON file is displayed at the bottom of each certificate page for programmatic access (addresses codecheckers/register#143)</li>
+<li>
+<strong>Schema.org metadata for certificates</strong>: Certificate landing pages now include structured Schema.org JSON-LD metadata in the HTML header. The certificate is represented as a Review entity with the paper as a ScholarlyArticle entity (via itemReviewed property). Includes all available information: paper title/authors/abstract/DOI, codecheckers with ORCID, check date, summary, and certificate PDF URL (as MediaObject). Metadata validates successfully with validator.schema.org. Enables better discoverability by search engines and tools that consume schema.org metadata (addresses codecheckers/register#182)</li>
+<li>
+<strong>Schema.org metadata for codechecker pages</strong>: Codechecker profile pages now include structured Schema.org JSON-LD metadata in the HTML header. The codechecker is represented as a Person entity with an array of Review entities representing all their codechecks. Each Review includes the certificate details and optionally includes the paper being reviewed (ScholarlyArticle with title, authors, DOI). Person entity includes ORCID identifier and optional GitHub profile link (via sameAs property). Enables better discoverability of codechecker profiles and their work by search engines and research tools</li>
+<li>
 <strong>Configurable field ordering</strong>: Register views now support per-filter column configuration, allowing different field orders and selections for main register vs. filtered views (venues, codecheckers). Main register now displays columns in the order: Certificate, Report, Title, Venue, Type, Check date (addresses <a href="https://github.com/codecheckers/codecheck/issues/101" class="external-link">#101</a>)</li>
 <li>
 <strong>Context-aware field filtering</strong>: Filtered views automatically exclude redundant fields (e.g., venue/type columns hidden on venue-specific pages, codechecker column hidden on codechecker pages)</li>
 <li>
 <strong>Hierarchical column configuration</strong>: New <code>CONFIG$REGISTER_COLUMNS</code> structure with filter-specific overrides and automatic fallback to defaults for maximum flexibility</li>
 <li>
+<strong>Enhanced CSV file fields</strong>: CSV files now include all available fields matching JSON output (Certificate ID, Certificate Link, Repository, Repository Link, Report, Title, Paper reference, Type, Venue, Check date). Previously CSV files only contained Certificate and Repository columns. This provides more complete data for programmatic access and analysis</li>
+<li>
+<strong>SEO support with sitemap.xml and robots.txt</strong>: Register rendering now automatically generates sitemap.xml and robots.txt files for improved search engine optimization and discoverability. Sitemap includes all generated pages (main register, venue pages, codechecker pages, certificate pages) with appropriate priorities and change frequencies. Robots.txt allows all search engines to crawl the register (addresses codecheckers/register#126)</li>
+<li>
+<strong>GitHub username support for codecheckers without ORCID</strong>: Codecheckers without ORCID now get their own pages using their GitHub username as the identifier (e.g., <code>/codecheckers/username/</code>). For codecheckers with ORCID, a redirect page is automatically created at their GitHub username URL that redirects to their ORCID-based page. This ensures all codecheckers are listed in the register regardless of whether they have an ORCID. Redirect pages use the main CSS and include the standard header/footer for consistent branding (addresses codecheckers/register#130)</li>
+<li>
 <strong>Relative asset links</strong>: Favicon and CSS stylesheet links in HTML headers now use relative paths calculated based on each page’s depth, eliminating hard-coded absolute URLs and improving portability</li>
 <li>
-<strong>Build metadata in footer</strong>: All register pages now display build information in muted text at the bottom of the footer, including timestamp, package version, codecheck package commit, and register commit with GitHub links (addresses <a href="https://github.com/codecheckers/codecheck/issues/105" class="external-link">#105</a>)</li>
+<strong>Build metadata in footer</strong>: Overview/listing pages (main register, all venues list, all codecheckers list) now display build information in muted text at the bottom of the footer, including timestamp, package version, codecheck package commit, and register commit with GitHub links. Build info is intentionally omitted from individual certificate, venue, and codechecker pages to avoid confusion about page freshness (addresses <a href="https://github.com/codecheckers/codecheck/issues/105" class="external-link">#105</a>)</li>
 <li>
 <strong>Dual commit tracking</strong>: Footer now displays both codecheck package commit and register repository commit as clickable links to respective GitHub commits</li>
 <li>
@@ -81,15 +93,26 @@
 </li>
 <li>
 <strong>Fixed NA codechecker handling</strong>: Codecheckers without ORCID identifiers are now properly filtered out during register rendering, preventing creation of invalid “NA” directories</li>
+<li>
+<strong>Fixed NULL paper title handling</strong>: Added NULL check in <code><a href="../reference/set_paper_title_references_csv.html">set_paper_title_references_csv()</a></code> to prevent “missing value where TRUE/FALSE needed” error when paper titles are NULL during CSV generation</li>
+<li>
+<strong>Fixed icon font paths</strong>: Icon font CSS links (academicons, font-awesome) in HTML header now use <code>{{base_path}}</code> variable for correct relative paths on all pages (root, venue, codechecker pages). Previously hardcoded <code>libs/</code> path only worked on root index page</li>
+<li>
+<strong>Fixed JavaScript/CSS loading</strong>: Fixed two critical bugs in <code><a href="../reference/edit_html_lib_paths.html">edit_html_lib_paths()</a></code>:
+<ol style="list-style-type: decimal"><li>Updated regex pattern to match any relative path to libs folder (libs/, ../libs/, ../../libs/, etc.) instead of only matching exact “libs/”</li>
+<li>Added filtering of empty path components caused by double slashes (e.g., “docs/codecheckers/ID//index.html”) which caused incorrect relative path calculation (../../../ instead of ../../) These fixes resolve “$ is not defined” errors and broken CSS styling on venue, codechecker, and certificate pages</li>
+</ol></li>
+<li>
+<strong>Fixed navbar logo paths</strong>: Navigation header logo now correctly handles relative paths on all pages. For root page, logo path is now <code>codecheck_logo.svg</code> instead of <code>./codecheck_logo.svg</code> to avoid browser compatibility issues. Deeper pages use proper relative paths (<code>../codecheck_logo.svg</code>, <code>../../codecheck_logo.svg</code>, etc.)</li>
 </ul></div>
 <div class="section level3">
 <h3 id="new-functions-0-23-0">New Functions<a class="anchor" aria-label="anchor" href="#new-functions-0-23-0"></a></h3>
 <ul><li>
-<strong><code>generate_navigation_header()</code></strong>: Generates navigation header HTML with CODECHECK logo and conditional menu (menu shown only on main register page)</li>
+<strong><code><a href="../reference/generate_navigation_header.html">generate_navigation_header()</a></code></strong>: Generates navigation header HTML with CODECHECK logo and conditional menu (menu shown only on main register page)</li>
 <li>
-<strong><code>generate_breadcrumb()</code></strong>: Generates Bootstrap-styled breadcrumb navigation HTML based on page context (filter type, table details, and relative path)</li>
+<strong><code><a href="../reference/generate_breadcrumb.html">generate_breadcrumb()</a></code></strong>: Generates Bootstrap-styled breadcrumb navigation HTML based on page context (filter type, table details, and relative path)</li>
 <li>
-<strong><code>calculate_breadcrumb_base_path()</code></strong>: Calculates relative path to register root based on page depth for breadcrumb links</li>
+<strong><code><a href="../reference/calculate_breadcrumb_base_path.html">calculate_breadcrumb_base_path()</a></code></strong>: Calculates relative path to register root based on page depth for breadcrumb links</li>
 <li>
 <strong><code><a href="../reference/get_build_metadata.html">get_build_metadata()</a></code></strong>: Retrieves build metadata including timestamp, package version, and git commit information from both register and codecheck package repositories</li>
 <li>
@@ -104,6 +127,52 @@
 <strong><code><a href="../reference/get_codechecker_profile.html">get_codechecker_profile()</a></code></strong>: Retrieves profile information (name, GitHub handle, ORCID, fields, languages) by ORCID</li>
 <li>
 <strong><code><a href="../reference/generate_codechecker_profile_links.html">generate_codechecker_profile_links()</a></code></strong>: Generates HTML for horizontal list of profile links with icons</li>
+<li>
+<strong><code><a href="../reference/add_repository_links_csv.html">add_repository_links_csv()</a></code></strong>: Adds “Repository Link” column to register table for CSV export, converting platform specs (e.g., “github::org/repo”) to full URLs</li>
+<li>
+<strong><code><a href="../reference/set_paper_title_references_csv.html">set_paper_title_references_csv()</a></code></strong>: Extracts plain text “Title” and “Paper reference” columns from hyperlinked “Paper Title” for CSV export</li>
+<li>
+<strong><code><a href="../reference/generate_sitemap.html">generate_sitemap()</a></code></strong>: Generates sitemap.xml file listing all register pages with priorities and change frequencies for search engine optimization</li>
+<li>
+<strong><code><a href="../reference/generate_robots_txt.html">generate_robots_txt()</a></code></strong>: Generates robots.txt file allowing all search engines to crawl the register and referencing the sitemap</li>
+<li>
+<strong><code><a href="../reference/get_codechecker_profile_by_handle.html">get_codechecker_profile_by_handle()</a></code></strong>: Retrieves codechecker profile information by GitHub username (handle)</li>
+<li>
+<strong><code><a href="../reference/get_github_handle_by_name.html">get_github_handle_by_name()</a></code></strong>: Looks up GitHub username for a codechecker by their full name from the codecheckers registry</li>
+<li>
+<strong><code><a href="../reference/generate_codechecker_redirect.html">generate_codechecker_redirect()</a></code></strong>: Creates HTML redirect page at GitHub username URL that redirects to ORCID-based page for codecheckers with both identifiers</li>
+<li>
+<strong><code><a href="../reference/generate_codechecker_redirects.html">generate_codechecker_redirects()</a></code></strong>: Iterates through all codecheckers in register and creates redirect pages for those with both ORCID and GitHub username</li>
+<li>
+<strong><code><a href="../reference/generate_cert_json.html">generate_cert_json()</a></code></strong>: Generates index.json file for certificate landing pages containing all metadata in machine-readable format (certificate, paper, CODECHECK details including abstract, summary, and manifest)</li>
+<li>
+<strong><code><a href="../reference/generate_cert_schema_org.html">generate_cert_schema_org()</a></code></strong>: Generates Schema.org JSON-LD for certificate landing pages, representing the CODECHECK certificate as a Review of a ScholarlyArticle with all available metadata (paper title/authors/abstract/DOI, codecheckers with ORCID, check date, summary, certificate PDF URL)</li>
+<li>
+<strong><code><a href="../reference/generate_codechecker_schema_org.html">generate_codechecker_schema_org()</a></code></strong>: Generates Schema.org JSON-LD for codechecker profile pages, representing the codechecker as a Person with an array of Review entities for all their codechecks. Each Review optionally includes the paper being reviewed (ScholarlyArticle). Supports optional GitHub profile link via sameAs property</li>
+</ul></div>
+<div class="section level3">
+<h3 id="tests-0-23-0">Tests<a class="anchor" aria-label="anchor" href="#tests-0-23-0"></a></h3>
+<ul><li>
+<strong>Schema.org metadata generation for certificates</strong>: Added comprehensive test suite (<code>test_schema_org_generation.R</code>) with 43 test cases covering:
+<ul><li>JSON-LD structure and validity</li>
+<li>Review and ScholarlyArticle types</li>
+<li>Author/codechecker handling with and without ORCID</li>
+<li>Paper metadata (title, abstract, DOI)</li>
+<li>Optional fields (summary, abstract, report URL)</li>
+<li>Date parsing and formatting</li>
+<li>Edge cases (single author, missing fields, empty strings)</li>
+</ul></li>
+<li>
+<strong>Schema.org metadata generation for codecheckers</strong>: Added comprehensive test suite (<code>test_schema_org_codechecker.R</code>) with 17 test cases covering:
+<ul><li>Person entity structure with ORCID <a href="https://github.com/id" class="external-link">@id</a></li>
+<li>Review array generation from register table</li>
+<li>GitHub sameAs link handling (NULL, empty string, “NA”)</li>
+<li>Check date parsing and formatting</li>
+<li>Single and multiple codechecks</li>
+<li>Edge cases (missing dates, empty tables)</li>
+<li>JSON-LD validity for schema.org validator</li>
+<li>Schema.org validator compliance</li>
+</ul></li>
 </ul></div>
 <div class="section level3">
 <h3 id="documentation-0-23-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-23-0"></a></h3>
@@ -143,6 +212,12 @@
 <div class="section level3">
 <h3 id="infrastructure-improvements-development-version">Infrastructure Improvements<a class="anchor" aria-label="anchor" href="#infrastructure-improvements-development-version"></a></h3>
 <ul><li>
+<strong>Cleaner output directories</strong>: Temporary HTML section files (index_header.html, index_prefix.html, index_postfix.html, html_document.yml) are now automatically removed after rendering, as their content is already embedded in the final index.html file</li>
+<li>
+<strong>Separated CSS styles</strong>: Moved all register-specific CSS styles from inline <code>&lt;style&gt;</code> tags to a dedicated <code>codecheck-register.css</code> file in <code>docs/assets/</code>, improving maintainability and reducing HTML file sizes. The CSS file is automatically copied from package templates during register rendering.</li>
+<li>
+<strong>Improved path construction</strong>: Replaced string concatenation (<code>paste0</code>) with <code><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path()</a></code> for all file system path construction throughout the codebase, ensuring cross-platform compatibility and following R best practices (addresses codecheckers/register#70)</li>
+<li>
 <strong>Local library management</strong>: Removed all external CDN dependencies (Bootstrap, Font Awesome, Academicons) and implemented local library management system</li>
 <li>
 <strong>New function</strong>: Added <code><a href="../reference/setup_external_libraries.html">setup_external_libraries()</a></code> to download and install CSS/JS libraries locally in <code>docs/libs/</code>, ensuring reproducibility and offline capability</li>

@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   codecheck_overview: codecheck_overview.html
   codecheck_register: codecheck_register.html
-last_built: 2025-11-13T09:01Z
+last_built: 2025-11-13T17:39Z
 urls:
   reference: http://codecheck.org.uk/codecheck/reference
   article: http://codecheck.org.uk/codecheck/articles

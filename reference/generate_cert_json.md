@@ -1,18 +1,12 @@
-# Renders an HTML certificate file from a Markdown template for a specific certificate.
+# Generates a JSON file with all certificate metadata
 
-Renders an HTML certificate file from a Markdown template for a specific
-certificate.
+Creates an index.json file containing all information displayed on the
+certificate landing page for programmatic access.
 
 ## Usage
 
 ``` r
-render_cert_html(
-  cert_id,
-  repo_link,
-  download_cert_status,
-  cert_type,
-  cert_venue
-)
+generate_cert_json(cert_id, repo_link, cert_type, cert_venue)
 ```
 
 ## Arguments
@@ -26,11 +20,6 @@ render_cert_html(
 
   A character string containing the repository link associated with the
   certificate.
-
-- download_cert_status:
-
-  An integer (0 or 1) indicating whether the certificate PDF was
-  downloaded (1) or not (0).
 
 - cert_type:
 
