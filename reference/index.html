@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">codecheck</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.23.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.25.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -125,10 +125,17 @@
 
         <dt>
 
+          <code><a href="add_report_hyperlinks_reg.html">add_report_hyperlinks_reg()</a></code>
+
+        </dt>
+        <dd>Format Report column for display by creating markdown links with shortened text</dd>
+
+        <dt>
+
           <code><a href="add_report_links.html">add_report_links()</a></code>
 
         </dt>
-        <dd>Function for adding clickable links to the report for each entry in the register table.</dd>
+        <dd>Function for adding report URLs for each entry in the register table.</dd>
 
         <dt>
 
@@ -156,7 +163,7 @@
           <code><a href="add_venue_hyperlinks_reg.html">add_venue_hyperlinks_reg()</a></code>
 
         </dt>
-        <dd>Function for adding clickable links to the codecheck venue pages for each entry in the register table.</dd>
+        <dd>Function for adding clickable links to the codecheck venue pages for each entry in the register table. Uses relative paths for HTML display (absolute URLs used in JSON/CSV).</dd>
 
         <dt>
 
@@ -170,7 +177,7 @@
           <code><a href="add_venue_type_hyperlinks_reg.html">add_venue_type_hyperlinks_reg()</a></code>
 
         </dt>
-        <dd>Function for adding clickable links to the codecheck venue type pages for each entry in the register table.</dd>
+        <dd>Function for adding clickable links to the codecheck venue type pages for each entry in the register table. Uses relative paths for HTML display (absolute URLs used in JSON/CSV).</dd>
 
         <dt>
 
@@ -178,6 +185,13 @@
 
         </dt>
         <dd>Add Hyperlinks to Venues Table</dd>
+
+        <dt>
+
+          <code><a href="adjust_cert_links_relative.html">adjust_cert_links_relative()</a></code>
+
+        </dt>
+        <dd>Convert certificate links from absolute to relative paths based on page depth</dd>
 
         <dt>
 
@@ -241,6 +255,13 @@
 
         </dt>
         <dd>Copy files from manifest into the codecheck folder and summarise.</dd>
+
+        <dt>
+
+          <code><a href="copy_package_javascript.html">copy_package_javascript()</a></code>
+
+        </dt>
+        <dd>Copy Package JavaScript Files to Output Directory</dd>
 
         <dt>
 

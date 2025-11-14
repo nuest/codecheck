@@ -1,5 +1,193 @@
 # Changelog
 
+## codecheck 0.25.0
+
+### Bug Fixes
+
+- **Fixed navigation links on venue type pages**: Corrected navigation
+  menu links on venue type-specific pages (e.g.,
+  `/venues/institutions/`, `/venues/communities/`). The “All Venues”
+  link now correctly points to `../index.html` (one level up), and “All
+  Codecheckers” link points to `../../codecheckers/index.html` (up two
+  levels then into codecheckers). Previously these links were broken
+  because they were using the generic base_path calculation
+- **Fixed navigation and logo paths on venue type pages**: Corrected
+  base path calculation for venue type-specific pages (e.g.,
+  `/venues/institutions/`, `/venues/journals/`). These pages are two
+  levels deep, but were incorrectly treated as one level deep, causing
+  broken logo and navigation links. The
+  [`calculate_breadcrumb_base_path()`](http://codecheck.org.uk/codecheck/reference/calculate_breadcrumb_base_path.md)
+  function now correctly handles non-register table pages with
+  subcategories
+- **Removed venue label column from venue type pages**: The “venue
+  label” column (showing GitHub issue labels) is no longer displayed on
+  venue type-specific pages (institutions, journals, conferences,
+  communities) as it provides no useful information when all venues are
+  of the same type. The column is still shown on the “all venues” page
+  where it helps distinguish between different venue types
+
+### Performance & Scalability
+
+- **Certificate identifier prefixes in logs**: All log messages during
+  certificate rendering operations now include the certificate
+  identifier as a prefix (e.g., “2020-001 \| Downloaded successfully”).
+  This makes logs much easier to understand when rendering is executed
+  in parallel, as messages from different certificates can be easily
+  distinguished and tracked
+
+## codecheck 0.24.0
+
+### Register Enhancements
+
+- **Relative paths for localhost development**: All internal navigation
+  links in register tables and certificate pages now use relative paths
+  instead of absolute URLs pointing to codecheck.org.uk. This enables
+  seamless development and testing on localhost. Includes certificate
+  links, venue links, venue type links, and codechecker links throughout
+  the register. JSON and CSV exports continue to use absolute URLs for
+  external consumption
+- **Optimized table column widths**: Paper Title column width has been
+  doubled for better readability, while the Report column has been
+  significantly reduced. Report links now display shortened URLs
+  (removing “<http://>” and “<https://>” prefixes) while maintaining
+  full URLs in the underlying links. These changes improve the visual
+  balance and readability of register tables
+- **Expanded certificate page text sections**: Certificate pages now
+  display full abstract and summary text without scrollable containers,
+  allowing the “paper details” section to grow naturally to accommodate
+  all content. This improves readability by eliminating the need to
+  scroll within small text boxes
+- **Auto-pagination for certificate images**: Certificate pages now
+  automatically advance through certificate preview images every 5
+  seconds when the page loads. Auto-pagination stops when users interact
+  with the page (clicks or keyboard navigation), providing a helpful
+  preview without interfering with manual navigation
+- **Full-width certificate pages**: Certificate pages now use the full
+  viewport width instead of being constrained to 1200px, providing more
+  space for the two-column layout with certificate images and details.
+  The header and footer maintain their 1200px max-width for consistency
+  with other pages
+- **Improved header logo alignment**: Navigation header logo is now
+  flush left-aligned with no left margin or padding, matching the
+  alignment of footer elements for visual consistency across all pages
+- **Consistent sorting across all outputs**: All register outputs (HTML,
+  Markdown, JSON) are now consistently sorted by certificate identifier
+  for predictable ordering. The exception is featured.json which remains
+  sorted by check date (most recent first) to highlight the latest
+  codechecks (addresses codecheckers/register#160)
+- **Citation generator on certificate pages**: Certificate landing pages
+  now include an interactive citation generator powered by citation.js.
+  Users can select from multiple citation formats (APA, Vancouver,
+  Harvard, BibTeX, BibLaTeX, RIS) using a dropdown menu, with BibTeX as
+  the default format. The citation preview updates automatically and
+  includes a “Copy to clipboard” button for easy copying. Citations are
+  generated from the certificate DOI, with metadata retrieved from
+  data.crosscite.org (this is noted transparently on the page).
+  (addresses codecheckers/register#82)
+- **Selective meta generator tags**: Meta generator tags now show
+  different levels of detail based on page type. Overview/list pages
+  (main register, all venues, all codecheckers) display full version
+  information (e.g., “codecheck 0.23.0, register commit abc123”).
+  Individual detail pages (specific certificates, venues, and
+  codecheckers) show only “codecheck” without version information. This
+  parallels the existing approach for build metadata and avoids
+  confusion about page freshness for individual resource pages
+- **Centralized JavaScript libraries**: All JavaScript code is now
+  centralized in dedicated files (`cert-utils.js`, `cert-citation.js`)
+  loaded from `docs/libs/codecheck/`. This eliminates code duplication
+  across certificate templates, improves maintainability, and ensures
+  consistent behavior. The citation.js library is now bundled locally
+  instead of loading from CDN, improving reliability and page load times
+- **Improved navigation visibility**: Top-right navigation menu font
+  size doubled for better readability. Active page link (All Venues or
+  All Codecheckers) is now highlighted with bold font. Breadcrumb
+  navigation font size increased by 20% for improved visibility
+- **Centralized breadcrumb styling**: Breadcrumb container styling has
+  been moved from inline styles to the central CSS file
+  (`.breadcrumb-container` class). Left and right padding has been
+  removed for cleaner alignment with page content
+
+### Performance & Scalability
+
+- **Parallel certificate rendering**: Certificate HTML pages can now be
+  rendered in parallel using multiple CPU cores for significant
+  performance improvements. The
+  [`register_render()`](http://codecheck.org.uk/codecheck/reference/register_render.md)
+  function accepts two new parameters: `parallel` (logical, defaults to
+  FALSE) and `ncores` (integer, auto-detects available cores minus 1 if
+  NULL). On an 8-core machine, parallel rendering provides approximately
+  5-6x speedup for certificate generation. Platform-specific
+  implementation uses
+  [`parallel::mclapply()`](https://rdrr.io/r/parallel/mclapply.html) on
+  Unix/Mac (memory-efficient forking) and
+  [`parallel::parLapply()`](https://rdrr.io/r/parallel/clusterApply.html)
+  on Windows (cluster-based). Enhanced error handling ensures individual
+  certificate failures don’t stop the entire render. Timing statistics
+  now include theoretical speedup and parallel efficiency metrics.
+  Usage: `register_render(parallel = TRUE)` or
+  `register_render(parallel = TRUE, ncores = 4)`
+- **Timing instrumentation for performance analysis**: Added
+  comprehensive timing instrumentation to all rendering functions
+  ([`render_cert_htmls()`](http://codecheck.org.uk/codecheck/reference/render_cert_htmls.md),
+  [`create_register_files()`](http://codecheck.org.uk/codecheck/reference/create_register_files.md),
+  [`create_non_register_files()`](http://codecheck.org.uk/codecheck/reference/create_non_register_files.md)).
+  Each function now logs start/end times with millisecond precision,
+  individual item rendering times, and summary statistics (total time,
+  average time per item). This enables performance profiling and
+  identification of bottlenecks. Log output includes timestamps in ISO
+  8601 format for easy parsing and analysis
+- **Parallelization analysis and implementation guide**: Created
+  comprehensive documentation
+  (`inst/extdata/docs/PARALLELIZATION_ANALYSIS.md`) analyzing
+  parallelization opportunities for certificate and register page
+  rendering. Includes detailed analysis of current architecture, timing
+  analysis methodology, three prioritized parallelization strategies,
+  implementation recommendations using R’s `parallel` package, expected
+  performance gains (6x speedup for certificates on 8-core machine), and
+  complete working example
+  (`inst/extdata/scripts/parallel_render_example.R`). Documentation
+  guides through measuring current performance, implementing parallel
+  execution, testing strategies, and tuning for optimal performance
+
+### Bug Fixes
+
+- **Fixed duplicate certificates in NA codechecker pages**: When
+  multiple codecheckers without ORCID work on the same certificate, the
+  certificate now appears only once in the NA codechecker page instead
+  of once per NA codechecker. Implemented deduplication by keeping one
+  row per unique combination of Certificate ID and Codechecker
+  identifier (addresses codecheckers/register#153)
+- **Codecheckers without ORCID now appear on “All codecheckers” page**:
+  Fixed issue where codecheckers without ORCID identifiers were excluded
+  from the main codecheckers listing. These codecheckers now appear with
+  the label “Codecheckers without ORCID”, with an empty ORCID column,
+  and link to the `/codecheckers/NA/` page showing all their codechecks.
+  If a codechecker has a GitHub username registered in the codecheckers
+  repository, that username is used as their identifier instead of “NA”
+- **Fixed NA check date handling in schema.org metadata**: Added
+  `!is.na()` check in
+  [`generate_codechecker_schema_org()`](http://codecheck.org.uk/codecheck/reference/generate_codechecker_schema_org.md)
+  to prevent “missing value where TRUE/FALSE needed” error when Check
+  date column contains NA values
+- **Exported
+  [`generate_cert_json()`](http://codecheck.org.uk/codecheck/reference/generate_cert_json.md)
+  function**: Fixed test failures by adding `@export` tag to make the
+  [`generate_cert_json()`](http://codecheck.org.uk/codecheck/reference/generate_cert_json.md)
+  function available for testing and external use. The function
+  generates index.json files for certificate pages containing all
+  certificate metadata in machine-readable format
+- **Fixed citation generator loading**: Completely rewrote the citation
+  library loading system to be simpler and more reliable. Created
+  `citation-wrapper.js` to expose the Cite object globally from the
+  browserify bundle (citation.js from npm uses CommonJS modules and
+  doesn’t expose globals). Simplified initialization code by removing
+  complex polling mechanism - Cite is now immediately available after
+  wrapper loads. Added comprehensive documentation
+  (`inst/extdata/scripts/JAVASCRIPT_LIBRARIES.md`) and download script
+  (`inst/extdata/scripts/download-js-libraries.sh`) for managing
+  JavaScript libraries locally without CDN dependencies. This fixes the
+  “Loading citation…” indefinitely issue
+
 ## codecheck 0.23.0 (2025-11-12)
 
 ### Register Enhancements
@@ -121,9 +309,10 @@
 - **Fixed venue label error**: Resolved “venue_label must be size 1, not
   12” error by ungrouping data frame before venue_label mutation in
   [`create_all_venues_table()`](http://codecheck.org.uk/codecheck/reference/create_all_venues_table.md)
-- **Fixed NA codechecker handling**: Codecheckers without ORCID
-  identifiers are now properly filtered out during register rendering,
-  preventing creation of invalid “NA” directories
+- **Fixed NA codechecker handling** (superseded in development version):
+  Codecheckers without ORCID identifiers were temporarily filtered out
+  during register rendering to prevent duplicate entries. This has been
+  replaced with proper deduplication logic in the development version
 - **Fixed NULL paper title handling**: Added NULL check in
   [`set_paper_title_references_csv()`](http://codecheck.org.uk/codecheck/reference/set_paper_title_references_csv.md)
   to prevent “missing value where TRUE/FALSE needed” error when paper

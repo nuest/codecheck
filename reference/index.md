@@ -34,9 +34,12 @@
 - [`add_paper_links()`](http://codecheck.org.uk/codecheck/reference/add_paper_links.md)
   : Function for adding clickable links to the paper for each entry in
   the register table.
+- [`add_report_hyperlinks_reg()`](http://codecheck.org.uk/codecheck/reference/add_report_hyperlinks_reg.md)
+  : Format Report column for display by creating markdown links with
+  shortened text
 - [`add_report_links()`](http://codecheck.org.uk/codecheck/reference/add_report_links.md)
-  : Function for adding clickable links to the report for each entry in
-  the register table.
+  : Function for adding report URLs for each entry in the register
+  table.
 - [`add_repository_hyperlink()`](http://codecheck.org.uk/codecheck/reference/add_repository_hyperlink.md)
   : Replaces a placeholder in Markdown content with a hyperlink to the
   repository, based on the repository type (e.g., GitHub, OSF, GitLab).
@@ -48,14 +51,19 @@
   creation of the json file.
 - [`add_venue_hyperlinks_reg()`](http://codecheck.org.uk/codecheck/reference/add_venue_hyperlinks_reg.md)
   : Function for adding clickable links to the codecheck venue pages for
-  each entry in the register table.
+  each entry in the register table. Uses relative paths for HTML display
+  (absolute URLs used in JSON/CSV).
 - [`add_venue_type_hyperlinks_non_reg()`](http://codecheck.org.uk/codecheck/reference/add_venue_type_hyperlinks_non_reg.md)
   : Add Hyperlinks to Venue Type-Specific Table
 - [`add_venue_type_hyperlinks_reg()`](http://codecheck.org.uk/codecheck/reference/add_venue_type_hyperlinks_reg.md)
   : Function for adding clickable links to the codecheck venue type
-  pages for each entry in the register table.
+  pages for each entry in the register table. Uses relative paths for
+  HTML display (absolute URLs used in JSON/CSV).
 - [`add_venues_hyperlinks_non_reg()`](http://codecheck.org.uk/codecheck/reference/add_venues_hyperlinks_non_reg.md)
   : Add Hyperlinks to Venues Table
+- [`adjust_cert_links_relative()`](http://codecheck.org.uk/codecheck/reference/adjust_cert_links_relative.md)
+  : Convert certificate links from absolute to relative paths based on
+  page depth
 - [`as_latex_url()`](http://codecheck.org.uk/codecheck/reference/as_latex_url.md)
   : Wrap URL for LaTeX
 - [`calculate_breadcrumb_base_path()`](http://codecheck.org.uk/codecheck/reference/calculate_breadcrumb_base_path.md)
@@ -78,6 +86,8 @@
   saving them in the specified certificate directory.
 - [`copy_manifest_files()`](http://codecheck.org.uk/codecheck/reference/copy_manifest_files.md)
   : Copy files from manifest into the codecheck folder and summarise.
+- [`copy_package_javascript()`](http://codecheck.org.uk/codecheck/reference/copy_package_javascript.md)
+  : Copy Package JavaScript Files to Output Directory
 - [`create_all_codecheckers_table()`](http://codecheck.org.uk/codecheck/reference/create_all_codecheckers_table.md)
   : Create Codecheckers Table
 - [`create_all_venues_table()`](http://codecheck.org.uk/codecheck/reference/create_all_venues_table.md)

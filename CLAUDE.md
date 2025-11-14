@@ -417,7 +417,7 @@ Creates CSV files for each venue/codechecker - For codecheckers: Reads
 temporary CSV (register has lists in Codechecker column), unnests, then
 groups - Uses `CONFIG$FILTER_COLUMN_NAMES` to determine grouping column
 
-**R/utils_render_register_general.r** - Core register rendering: -
+**R/utils_render_register_general.R** - Core register rendering: -
 [`create_register_files()`](http://codecheck.org.uk/codecheck/reference/create_register_files.md) -
 Orchestrates creation of all register views (original + filtered) -
 [`create_original_register_files()`](http://codecheck.org.uk/codecheck/reference/create_original_register_files.md) -
@@ -662,7 +662,53 @@ The rendering process creates this directory structure in `docs/`:
         │   └── register.json
         └── ...
 
-#### 2.7. Relationship with ../register Repository
+#### 2.7. JavaScript Library Management
+
+Certificate pages use JavaScript libraries for interactive features like
+citation generation. All libraries are stored locally in
+`inst/extdata/js/` to avoid dependencies on external CDNs.
+
+**Current libraries:**
+
+**Citation.js** - Generates formatted citations from DOIs - Files:
+`citation.min.js` (2.7 MB) + `citation-wrapper.js` (2 KB) - Version:
+0.7.21 - Source: <https://www.npmjs.com/package/citation-js> - Note: The
+npm distribution is a browserify bundle that requires
+`citation-wrapper.js` to expose `Cite` as a global object
+
+**Library management:**
+
+Download all libraries:
+
+``` bash
+bash inst/extdata/scripts/download-js-libraries.sh
+```
+
+Or from R:
+
+``` r
+system("bash inst/extdata/scripts/download-js-libraries.sh")
+```
+
+**Documentation:** - `inst/extdata/scripts/JAVASCRIPT_LIBRARIES.md` -
+Complete documentation on library management, updating, and
+troubleshooting - `inst/extdata/scripts/download-js-libraries.sh` -
+Script to download all required libraries
+
+**Key points:** - Libraries are NOT loaded from CDNs - all files are
+stored locally - Citation.js requires a two-script setup: 1.
+`citation.min.js` - The browserify bundle 2. `citation-wrapper.js` -
+Exposes `Cite` globally (must load immediately after) - Template usage:
+`html <script src="../../libs/codecheck/citation.min.js"></script> <script src="../../libs/codecheck/citation-wrapper.js"></script>` -
+After loading, `Cite` is available globally for citation formatting
+
+**Troubleshooting:** - If citations show “Loading citation…”
+indefinitely, verify both `citation.min.js` and `citation-wrapper.js`
+are present and loaded in the correct order - See
+`inst/extdata/scripts/JAVASCRIPT_LIBRARIES.md` for detailed
+troubleshooting steps
+
+#### 2.8. Relationship with ../register Repository
 
 The `../register` repository is the **data and deployment repository**
 that contains: - `register.csv` - The master list of all codechecks -
@@ -696,7 +742,7 @@ register <- read.csv('register.csv', as.is = TRUE, comment.char = '#')
 codecheck::register_render(from = nrow(register) - 5, to = nrow(register))
 ```
 
-#### 2.8. Important Implementation Details
+#### 2.9. Important Implementation Details
 
 **Caching**: All remote `codecheck.yml` files are cached using
 [`R.cache::addMemoization()`](https://rdrr.io/pkg/R.cache/man/addMemoization.html)

@@ -21,6 +21,7 @@
 <url><loc>http://codecheck.org.uk/codecheck/reference/add_markdown_title.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/add_paper_details_md.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/add_paper_links.html</loc></url>
+<url><loc>http://codecheck.org.uk/codecheck/reference/add_report_hyperlinks_reg.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/add_report_links.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/add_repository_hyperlink.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/add_repository_links_csv.html</loc></url>
@@ -29,6 +30,7 @@
 <url><loc>http://codecheck.org.uk/codecheck/reference/add_venue_type_hyperlinks_non_reg.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/add_venue_type_hyperlinks_reg.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/add_venues_hyperlinks_non_reg.html</loc></url>
+<url><loc>http://codecheck.org.uk/codecheck/reference/adjust_cert_links_relative.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/as_latex_url.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/calculate_breadcrumb_base_path.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/check_certificate_id.html</loc></url>
@@ -38,6 +40,7 @@
 <url><loc>http://codecheck.org.uk/codecheck/reference/complete_codecheck_yml.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/convert_cert_pdf_to_png.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/copy_manifest_files.html</loc></url>
+<url><loc>http://codecheck.org.uk/codecheck/reference/copy_package_javascript.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/create_all_codecheckers_table.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/create_all_venues_table.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/create_cert_md.html</loc></url>
