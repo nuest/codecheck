@@ -89,7 +89,7 @@ register_render <- function(register = read.csv("register.csv", as.is = TRUE, co
   generate_sitemap(register_table, filter_by, output_dir = "docs")
   generate_robots_txt(output_dir = "docs")
 
-  return(register_table)
+  invisible(register_table)
 }
 
 #' Function for checking all entries in the register
