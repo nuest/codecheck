@@ -94,13 +94,13 @@ get_abstract_text_openalex <- function(register_repo){
   doi_api_url <- paste0(CONFIG$CERT_LINKS[["openalex_api"]], doi)
   # Correcting the api_url if it is malformed
   doi_api_url <- gsub("\\n", "", doi_api_url)
-  response <- httr::GET(doi_api_url)
+  response <- codecheck_GET(doi_api_url)
 
   if (httr::status_code(response) != 200){
     # Checking for redirects and retrieving the final doi from there
-    redirect_doi <- response$url 
+    redirect_doi <- response$url
     redirect_doi_api_url <- paste0(CONFIG$CERT_LINKS[["openalex_api"]], redirect_doi)
-    response <- httr::GET(redirect_doi_api_url)
+    response <- codecheck_GET(redirect_doi_api_url)
   }
 
   if (httr::status_code(response) == 200){
@@ -153,8 +153,8 @@ get_abstract_text_crossref <- function(register_repo) {
   # Correcting the api_url if it is malformed
   api_url <- gsub("\\n", "", api_url)
 
-  response <- httr::GET(api_url)
-  
+  response <- codecheck_GET(api_url)
+
   # Check if the request was successful
   if (httr::status_code(response) == 200) {
     data <- httr::content(response, "parsed")

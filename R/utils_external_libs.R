@@ -91,7 +91,7 @@ setup_external_libraries <- function(libs_dir = "docs/libs", force = FALSE) {
       if (force || !file.exists(dest_file)) {
         message("  Downloading ", basename(dest_file), "...")
         tryCatch({
-          response <- httr::GET(url, httr::write_disk(dest_file, overwrite = TRUE), httr::progress())
+          response <- codecheck_GET(url, httr::write_disk(dest_file, overwrite = TRUE), httr::progress())
           if (httr::status_code(response) == 200) {
             message("    \u2713 Downloaded successfully")
           } else {
@@ -180,7 +180,7 @@ download_font_awesome_fonts <- function(libs_dir, version) {
     if (!file.exists(dest_file)) {
       message("  Downloading font: ", font_file, "...")
       tryCatch({
-        httr::GET(url, httr::write_disk(dest_file, overwrite = TRUE))
+        codecheck_GET(url, httr::write_disk(dest_file, overwrite = TRUE))
         message("    \u2713 Downloaded")
       }, error = function(e) {
         warning("    \u2717 Error: ", e$message)
@@ -214,7 +214,7 @@ download_academicons_fonts <- function(libs_dir, version) {
     if (!file.exists(dest_file)) {
       message("  Downloading font: ", font_file, "...")
       tryCatch({
-        httr::GET(url, httr::write_disk(dest_file, overwrite = TRUE))
+        codecheck_GET(url, httr::write_disk(dest_file, overwrite = TRUE))
         message("    \u2713 Downloaded")
       }, error = function(e) {
         warning("    \u2717 Error: ", e$message)

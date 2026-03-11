@@ -72,7 +72,10 @@
       "Bash(/home/daniel/.nvm/versions/node/v18.20.8/bin/node /tmp/test-refresh.mjs)",
       "Bash(/home/daniel/.nvm/versions/node/v18.20.8/bin/node -e \":*)",
       "Bash(/home/daniel/.nvm/versions/node/v18.20.8/bin/node /tmp/test-version.mjs)",
-      "Bash(R -q -e 'tinytest::build_install_test\\(\".\"\\)' 2>&1 | tail -30)"
+      "Bash(R -q -e 'tinytest::build_install_test\\(\".\"\\)' 2>&1 | tail -30)",
+      "Bash(gh api:*)",
+      "WebFetch(domain:cli.r-lib.org)",
+      "WebFetch(domain:daroczig.github.io)"
     ],
     "deny": [],
     "ask": []

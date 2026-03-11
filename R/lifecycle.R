@@ -43,7 +43,7 @@ get_lifecycle_metadata <- function(identifier) {
   api_url <- paste0("https://api.crossref.org/works/", doi)
   message("Fetching metadata from CrossRef: ", api_url)
 
-  response <- httr::GET(api_url)
+  response <- codecheck_GET(api_url)
 
   if (httr::status_code(response) != 200) {
     stop("Failed to retrieve metadata from CrossRef. Status code: ",

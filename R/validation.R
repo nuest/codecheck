@@ -351,7 +351,7 @@ validate_codecheck_yml_crossref <- function(yml_file = "codecheck.yml",
   message("Fetching metadata from CrossRef: ", api_url)
 
   response <- tryCatch(
-    httr::GET(api_url),
+    codecheck_GET(api_url),
     error = function(e) {
       issues <<- c(issues, paste("Failed to connect to CrossRef API:", e$message))
       return(NULL)

@@ -89,7 +89,7 @@ get_codecheck_yml_osf <- function(x) {
 #' @importFrom yaml yaml.load
 get_codecheck_yml_gitlab <- function(x) {
   link <- paste0("https://gitlab.com/", x, "/-/raw/main/codecheck.yml?inline=false")
-  response <- httr::GET(link)
+  response <- codecheck_GET(link)
   
   if (response$status == 200) {
     content <- httr::content(response, as = "text", encoding = "UTF-8")
@@ -122,7 +122,7 @@ get_codecheck_yml_zenodo <- function(x, sandbox = FALSE) {
     files <- record$files
     for(f in files) {
       if(f$filename == "codecheck.yml") {
-        response <- httr::GET(f$download)
+        response <- codecheck_GET(f$download)
         content <- httr::content(response, as = "text", encoding = "UTF-8")
         config_file <- yaml::yaml.load(content)
         return(config_file)
@@ -434,7 +434,7 @@ validate_codecheck_yml <- function(configuration) {
     if(is.vector(codecheck_yml$repository)) {
       for(r in codecheck_yml$repository) {
         if(!is.null(r) && nchar(r) > 0) {
-          response <- tryCatch(httr::GET(r), error = function(e) NULL)
+          response <- tryCatch(codecheck_GET(r), error = function(e) NULL)
           if(!is.null(response)) {
             assertthat::assert_that(httr::http_error(response) == FALSE,
                                     msg = paste0(r, " - URL returns error: ",
@@ -445,7 +445,7 @@ validate_codecheck_yml <- function(configuration) {
       }
     } else {
       if(!is.null(codecheck_yml$repository) && nchar(codecheck_yml$repository) > 0) {
-        response <- tryCatch(httr::GET(codecheck_yml$repository), error = function(e) NULL)
+        response <- tryCatch(codecheck_GET(codecheck_yml$repository), error = function(e) NULL)
         if(!is.null(response)) {
           assertthat::assert_that(httr::http_error(response) == FALSE,
                                   msg = paste0(codecheck_yml$repository, " - URL returns error: ",

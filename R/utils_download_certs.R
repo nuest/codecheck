@@ -35,7 +35,7 @@ download_cert_pdf <- function(report_link, cert_id){
     else {
       # Download the PDF file
       pdf_path <- file.path(cert_sub_dir, "cert.pdf")
-      download_response <- httr::GET(cert_download_url, httr::write_disk(pdf_path, overwrite = TRUE))
+      download_response <- codecheck_GET(cert_download_url, httr::write_disk(pdf_path, overwrite = TRUE))
 
       if (httr::status_code(download_response) == 200) {
         message(cert_id, " | Downloaded successfully")
@@ -97,7 +97,7 @@ get_osf_cert_link <- function(report_link, cert_id){
 
   # Continue making requests while there is a 'next' page
   while (!is.null(files_url)) {
-    response <- httr::GET(files_url)
+    response <- codecheck_GET(files_url)
     
     # Check if the request was successful
     if (httr::status_code(response) != 200) {
@@ -158,16 +158,16 @@ get_osf_cert_link <- function(report_link, cert_id){
 #' @return The download link for the certificate file as a string if found; otherwise, NULL.
 get_zenodo_cert_link <- function(report_link, cert_id, api_key = "") {
   # Checking for redirects and retrieving the record_id from there
-  response <- httr::GET(report_link)
-  final_url <- response$url 
+  response <- codecheck_GET(report_link)
+  final_url <- response$url
   record_id <- basename(final_url)
 
   # Set the base URL for the Zenodo API
   # record_id <- gsub("zenodo.", "", basename(report_link))
   record_url <- paste0(CONFIG$CERT_LINKS[["zenodo_api"]], record_id, "/files")
-  
+
   # Make the API request
-  response <- httr::GET(record_url, httr::add_headers(Authorization = paste("Bearer", api_key)))
+  response <- codecheck_GET(record_url, httr::add_headers(Authorization = paste("Bearer", api_key)))
   
   # Check if the request was successful
   if (httr::status_code(response) == 200) {
@@ -233,7 +233,7 @@ get_researchequals_cert_link <- function(report_link, cert_id) {
   # Let's guess the ID from the report_link
   
   # Checking for redirects and retrieving the record_id from there
-  response <- httr::GET(report_link)
+  response <- codecheck_GET(report_link)
   final_url <- response$url
   record_id <- basename(final_url)
   
