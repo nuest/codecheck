@@ -274,6 +274,7 @@ CONFIG$DICT_VENUE_NAMES <- list()
 CONFIG$JSON_COLUMNS <- c(
   "Certificate ID",
   "Certificate Link",
+  "Certificate PDF",
   "Repository",
   "Repository Link",
   "Report",

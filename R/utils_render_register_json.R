@@ -50,6 +50,36 @@ set_paper_title_references <- function(register_table){
   return(register_table)
 }
 
+#' Add certificate PDF download URLs to the register table
+#'
+#' Resolves report DOIs to direct PDF download URLs using get_cert_link().
+#'
+#' @param register_table The register table (must have "Report" and "Certificate ID" columns)
+#' @return Register table with added "Certificate PDF" column
+add_cert_pdf_links <- function(register_table) {
+  register_table$`Certificate PDF` <- sapply(
+    seq_len(nrow(register_table)),
+    function(i) {
+      report <- register_table[i, "Report"]
+      cert_id <- register_table[i, "Certificate ID"]
+      if (is.na(report) || is.null(report) || nchar(report) == 0) {
+        return(NA_character_)
+      }
+      tryCatch(
+        {
+          link <- get_cert_link(report, cert_id)
+          if (is.null(link)) NA_character_ else link
+        },
+        error = function(e) {
+          warning(cert_id, " | Could not resolve certificate PDF URL: ", e$message)
+          NA_character_
+        }
+      )
+    }
+  )
+  return(register_table)
+}
+
 #' Renders register json for a single register_table
 #'
 #' @param register_table The register table
@@ -60,6 +90,9 @@ render_register_json <- function(register_table, table_details, filter) {
 
   # Set paper titles and references
   register_table_json <- set_paper_title_references(register_table_json)
+
+  # Add certificate PDF download URLs (resolves report DOIs, addresses register#87)
+  register_table_json <- add_cert_pdf_links(register_table_json)
 
   output_dir <- table_details[["output_dir"]]
 
