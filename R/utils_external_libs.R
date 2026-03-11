@@ -17,7 +17,7 @@ setup_external_libraries <- function(libs_dir = "docs/libs", force = FALSE) {
   # Create libs directory if it doesn't exist
   if (!dir.exists(libs_dir)) {
     dir.create(libs_dir, recursive = TRUE)
-    message("Created libraries directory: ", libs_dir)
+    cli::cli_alert_info("Created libraries directory: {.path {libs_dir}}")
   }
 
   # Define library specifications with provenance information
@@ -76,7 +76,7 @@ setup_external_libraries <- function(libs_dir = "docs/libs", force = FALSE) {
 
   for (lib_key in names(libraries)) {
     lib <- libraries[[lib_key]]
-    message("Processing ", lib$name, " ", lib$version, "...")
+    cli::cli_alert_info("Processing {lib$name} {lib$version}...")
 
     lib_dir <- file.path(libs_dir, dirname(lib$files[[1]]))
     if (!dir.exists(lib_dir)) {
@@ -89,11 +89,11 @@ setup_external_libraries <- function(libs_dir = "docs/libs", force = FALSE) {
       dest_file <- file.path(libs_dir, lib$files[[file_key]])
 
       if (force || !file.exists(dest_file)) {
-        message("  Downloading ", basename(dest_file), "...")
+        cli::cli_alert_info("  Downloading {.file {basename(dest_file)}}...")
         tryCatch({
           response <- codecheck_GET(url, httr::write_disk(dest_file, overwrite = TRUE), httr::progress())
           if (httr::status_code(response) == 200) {
-            message("    \u2713 Downloaded successfully")
+            cli::cli_alert_success("    Downloaded successfully")
           } else {
             warning("    \u2717 Failed with status ", httr::status_code(response))
           }
@@ -101,7 +101,7 @@ setup_external_libraries <- function(libs_dir = "docs/libs", force = FALSE) {
           warning("    \u2717 Error downloading: ", e$message)
         })
       } else {
-        message("  \u2713 Already exists: ", basename(dest_file))
+        cli::cli_alert_success("  Already exists: {.file {basename(dest_file)}}")
       }
     }
 
@@ -125,11 +125,11 @@ setup_external_libraries <- function(libs_dir = "docs/libs", force = FALSE) {
   }
 
   # Copy codecheck-register.css from package templates to docs/assets
-  message("\nCopying CODECHECK register CSS...")
+  cli::cli_alert_info("Copying CODECHECK register CSS...")
   assets_dir <- "docs/assets"
   if (!dir.exists(assets_dir)) {
     dir.create(assets_dir, recursive = TRUE)
-    message("Created assets directory: ", assets_dir)
+    cli::cli_alert_info("Created assets directory: {.path {assets_dir}}")
   }
 
   css_source <- system.file("extdata", "templates/assets/codecheck-register.css", package = "codecheck")
@@ -137,7 +137,7 @@ setup_external_libraries <- function(libs_dir = "docs/libs", force = FALSE) {
 
   if (file.exists(css_source)) {
     file.copy(css_source, css_dest, overwrite = TRUE)
-    message("  \u2713 Copied codecheck-register.css to ", css_dest)
+    cli::cli_alert_success("Copied codecheck-register.css to {.path {css_dest}}")
   } else {
     warning("  \u2717 Could not find codecheck-register.css in package templates")
   }
@@ -145,12 +145,12 @@ setup_external_libraries <- function(libs_dir = "docs/libs", force = FALSE) {
   # Write provenance information
   provenance_file <- file.path(libs_dir, "PROVENANCE.csv")
   write.csv(provenance, provenance_file, row.names = FALSE)
-  message("\nProvenance information written to: ", provenance_file)
+  cli::cli_alert_info("Provenance information written to: {.path {provenance_file}}")
 
   # Create README
   create_libs_readme(libs_dir, provenance)
 
-  message("\n\u2713 All libraries installed successfully in: ", libs_dir)
+  cli::cli_alert_success("All libraries installed successfully in: {.path {libs_dir}}")
   invisible(provenance)
 }
 
@@ -178,10 +178,10 @@ download_font_awesome_fonts <- function(libs_dir, version) {
     dest_file <- file.path(fonts_dir, font_file)
 
     if (!file.exists(dest_file)) {
-      message("  Downloading font: ", font_file, "...")
+      cli::cli_alert_info("  Downloading font: {.file {font_file}}...")
       tryCatch({
         codecheck_GET(url, httr::write_disk(dest_file, overwrite = TRUE))
-        message("    \u2713 Downloaded")
+        cli::cli_alert_success("    Downloaded")
       }, error = function(e) {
         warning("    \u2717 Error: ", e$message)
       })
@@ -212,10 +212,10 @@ download_academicons_fonts <- function(libs_dir, version) {
     dest_file <- file.path(fonts_dir, font_file)
 
     if (!file.exists(dest_file)) {
-      message("  Downloading font: ", font_file, "...")
+      cli::cli_alert_info("  Downloading font: {.file {font_file}}...")
       tryCatch({
         codecheck_GET(url, httr::write_disk(dest_file, overwrite = TRUE))
-        message("    \u2713 Downloaded")
+        cli::cli_alert_success("    Downloaded")
       }, error = function(e) {
         warning("    \u2717 Error: ", e$message)
       })
@@ -270,5 +270,5 @@ create_libs_readme <- function(libs_dir, provenance) {
 
   readme_file <- file.path(libs_dir, "README.md")
   writeLines(readme_content, readme_file)
-  message("README created: ", readme_file)
+  cli::cli_alert_info("README created: {.path {readme_file}}")
 }

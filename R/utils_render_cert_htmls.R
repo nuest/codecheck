@@ -17,7 +17,7 @@ generate_certs_redirect <- function() {
   redirect_file <- file.path(certs_dir, "index.html")
   writeLines(redirect_html, redirect_file)
 
-  message("Created redirect page at ", redirect_file)
+  cli::cli_alert_success("Created redirect page at {.path {redirect_file}}")
 }
 
 #' Generates HTML files for each certificate listed in the given register table.
@@ -42,11 +42,12 @@ render_cert_htmls <- function(register_table, force_download = FALSE, parallel =
     parallel <- FALSE
   }
 
-  message("[", format(Sys.time(), "%Y-%m-%d %H:%M:%OS3"), "] Starting certificate HTML rendering for ", nrow(register_table), " certificates")
+  n_certs <- nrow(register_table)
+  cli::cli_h2("Rendering {n_certs} certificate{?s}")
   if (parallel) {
-    message("    Using parallel execution with ", ncores, " cores")
+    cli::cli_alert_info("Using parallel execution with {ncores} cores")
   } else {
-    message("    Using sequential execution")
+    cli::cli_alert_info("Using sequential execution")
   }
   start_time_total <- Sys.time()
 
@@ -140,7 +141,7 @@ render_cert_htmls <- function(register_table, force_download = FALSE, parallel =
 
   # Execute rendering (parallel or sequential)
   results <- if (parallel && ncores > 1) {
-    message("[", format(Sys.time(), "%Y-%m-%d %H:%M:%OS3"), "] Launching ", ncores, " parallel workers...")
+    cli::cli_alert_info("Launching {ncores} parallel workers...")
 
     if (.Platform$OS.type == "windows") {
       # Windows: use cluster (parLapply)
@@ -179,15 +180,19 @@ render_cert_htmls <- function(register_table, force_download = FALSE, parallel =
 
   } else {
     # Sequential execution
-    message("[", format(Sys.time(), "%Y-%m-%d %H:%M:%OS3"), "] Processing certificates sequentially...")
+    n_total <- nrow(register_table)
+    cli_pb_id <- cli::cli_progress_bar(
+      format = "{cli::pb_spin} Rendering certificates [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} | {cli::pb_elapsed}",
+      total = n_total,
+      clear = FALSE
+    )
 
-    lapply(1:nrow(register_table), function(i) {
+    lapply(1:n_total, function(i) {
       result <- render_one_certificate(i, register_table, force_download, verbose = FALSE)
-      # Log each completion in sequential mode
-      message("[", format(Sys.time(), "%Y-%m-%d %H:%M:%OS3"),
-              "] ", result$cert_id, " | Completed",
-              " (", result$index, "/", nrow(register_table), ") in ",
-              sprintf("%.2f", result$elapsed), " seconds")
+      cli::cli_progress_update(id = cli_pb_id)
+      if (!result$success) {
+        cli::cli_alert_danger("{result$cert_id} | Failed: {result$error}")
+      }
       result
     })
   }
@@ -207,28 +212,22 @@ render_cert_htmls <- function(register_table, force_download = FALSE, parallel =
   max_time <- max(elapsed_times)
 
   # Print summary
-  message("[", format(Sys.time(), "%Y-%m-%d %H:%M:%OS3"),
-          "] Completed all ", nrow(register_table), " certificates")
-  message("    Total time: ", sprintf("%.2f", elapsed_total), " seconds")
-  message("    Avg time per cert: ", sprintf("%.2f", avg_time), " seconds")
-  message("    Median time: ", sprintf("%.2f", median_time), " seconds")
-  message("    Range: ", sprintf("%.2f", min_time), " - ", sprintf("%.2f", max_time), " seconds")
-  message("    Successes: ", successes, " / ", length(results))
+  cli::cli_alert_success("Completed {nrow(register_table)} certificate{?s} in {sprintf('%.1f', elapsed_total)}s")
+  cli::cli_alert_info("Avg: {sprintf('%.2f', avg_time)}s | Median: {sprintf('%.2f', median_time)}s | Range: {sprintf('%.2f', min_time)}-{sprintf('%.2f', max_time)}s")
+  cli::cli_alert_info("Successes: {successes}/{length(results)}")
 
   if (failures > 0) {
-    message("    Failures: ", failures)
-    message("    Failed certificates:")
+    cli::cli_alert_danger("{failures} certificate{?s} failed:")
     failed <- results[!sapply(results, function(r) r$success)]
     for (f in failed) {
-      message("      - ", f$cert_id, ": ", f$error)
+      cli::cli_alert_danger("  {f$cert_id}: {f$error}")
     }
   }
 
   if (parallel && ncores > 1) {
     theoretical_speedup <- nrow(register_table) * avg_time / elapsed_total
     efficiency <- theoretical_speedup / ncores
-    message("    Theoretical speedup: ", sprintf("%.2fx", theoretical_speedup))
-    message("    Parallel efficiency: ", sprintf("%.1f%%", efficiency * 100))
+    cli::cli_alert_info("Speedup: {sprintf('%.2fx', theoretical_speedup)} | Efficiency: {sprintf('%.1f%%', efficiency * 100)}")
   }
 }
 
@@ -272,11 +271,13 @@ render_cert_html <- function(cert_id, repo_link, download_cert_status, cert_type
   yaml_path <- normalizePath(file.path(getwd(), file.path(output_dir, "html_document.yml")))
 
   # Render HTML from markdown
+  # quiet = !CONFIG$VERBOSE suppresses pandoc command output; use verbose=TRUE in register_render() to see it
   rmarkdown::render(
     input = temp_md_path,
     output_file = "index.html",
     output_dir = output_dir,
-    output_yaml = yaml_path
+    output_yaml = yaml_path,
+    quiet = !isTRUE(CONFIG$VERBOSE)
   )
 
   # Remove temporary files (content already embedded in index.html)
@@ -379,7 +380,7 @@ generate_cert_json <- function(cert_id, repo_link, cert_type, cert_venue) {
     auto_unbox = TRUE
   )
 
-  message(cert_id, " | Generated JSON at ", json_path)
+  cli::cli_alert_success("{cert_id} | Generated JSON at {.path {json_path}}")
 }
 
 #' Generates section files for a certificate HTML page, including prefix, postfix, and header HTML components.

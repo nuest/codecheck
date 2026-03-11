@@ -197,7 +197,7 @@ generate_codechecker_redirect <- function(github_handle, orcid, name) {
   redirect_file <- file.path(handle_dir, "index.html")
   writeLines(output, redirect_file)
 
-  message("Created redirect page for ", name, " (", github_handle, " -> ", orcid, ")")
+  cli::cli_alert_success("Created redirect page for {name} ({github_handle} -> {orcid})")
   invisible(TRUE)
 }
 
@@ -247,7 +247,7 @@ generate_codechecker_redirects <- function(register_table) {
   }
 
   if (redirect_count > 0) {
-    message("Generated ", redirect_count, " codechecker redirect pages")
+    cli::cli_alert_success("Generated {redirect_count} codechecker redirect page{?s}")
   }
 
   invisible(redirect_count)

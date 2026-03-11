@@ -6,11 +6,11 @@
 #' @param register_table The original register data.
 #' @param filter_by A list specifying the filters to apply (e.g., "venues", "codecheckers").
 create_non_register_files <- function(register_table, filter_by){
-  message("[", format(Sys.time(), "%Y-%m-%d %H:%M:%OS3"), "] Starting non-register file creation")
+  cli::cli_h2("Creating non-register files")
   start_time_total <- Sys.time()
 
   for (filter in filter_by){
-    message("[", format(Sys.time(), "%Y-%m-%d %H:%M:%OS3"), "] Creating non-register files for filter: ", filter)
+    cli::cli_alert_info("Creating non-register files for filter: {.val {filter}}")
     start_time_filter <- Sys.time()
 
     list_tables <- create_tables_non_register(register_table, filter)
@@ -46,8 +46,25 @@ create_non_register_files <- function(register_table, filter_by){
           table <- table %>%
             rename(!!sym(col_names[["venue_label"]]) := venue_label)
         }
-        # Remove slug column
+        # Add codechecks URL linking to the venue's register.json (addresses register#107)
         if ("venue_slug" %in% colnames(table)) {
+          venue_type_col <- col_names[["Type"]]  # "Venue type"
+          if (venue_type_col %in% colnames(table)) {
+            # All-venues table: type is in the "Venue type" column
+            table$codechecks <- paste0(
+              CONFIG$HYPERLINKS[["venues"]],
+              sapply(table[[venue_type_col]], function(vt) CONFIG$VENUE_SUBCAT_PLURAL[[vt]]),
+              "/", table$venue_slug, "/register.json"
+            )
+          } else if (!is.null(subcat)) {
+            # Venue-type table: type comes from the subcat
+            plural_type <- CONFIG$VENUE_SUBCAT_PLURAL[[subcat]]
+            table$codechecks <- paste0(
+              CONFIG$HYPERLINKS[["venues"]],
+              plural_type, "/", table$venue_slug, "/register.json"
+            )
+          }
+          # Remove slug column
           table <- table %>% select(-`venue_slug`)
         }
       }
@@ -60,15 +77,16 @@ create_non_register_files <- function(register_table, filter_by){
       )
 
       elapsed_table <- as.numeric(difftime(Sys.time(), start_time_table, units = "secs"))
-      message("[", format(Sys.time(), "%Y-%m-%d %H:%M:%OS3"), "] Completed non-register ", filter, " ", table_name, " in ", sprintf("%.2f", elapsed_table), " seconds")
+      cli::cli_alert_success("Completed non-register {filter} {.val {table_name}} in {sprintf('%.2f', elapsed_table)}s")
     }
 
     elapsed_filter <- as.numeric(difftime(Sys.time(), start_time_filter, units = "secs"))
-    message("[", format(Sys.time(), "%Y-%m-%d %H:%M:%OS3"), "] Completed non-register filter ", filter, " (", length(list_tables), " tables) in ", sprintf("%.2f", elapsed_filter), " seconds")
+    n_tables <- length(list_tables)
+    cli::cli_alert_success("Completed non-register filter {.val {filter}} ({n_tables} tables) in {sprintf('%.1f', elapsed_filter)}s")
   }
 
   elapsed_total <- as.numeric(difftime(Sys.time(), start_time_total, units = "secs"))
-  message("[", format(Sys.time(), "%Y-%m-%d %H:%M:%OS3"), "] Completed all non-register files in ", sprintf("%.2f", elapsed_total), " seconds")
+  cli::cli_alert_success("Completed all non-register files in {sprintf('%.1f', elapsed_total)}s")
 }
 
 #' Create Non-Register Tables

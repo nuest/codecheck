@@ -15,6 +15,7 @@
 #' @param to The last register entry to check
 #' @param parallel Logical; if TRUE, renders certificates in parallel using multiple cores. Defaults to FALSE.
 #' @param ncores Integer; number of CPU cores to use for parallel rendering. If NULL, automatically detects available cores minus 1. Defaults to NULL.
+#' @param verbose Logical; if TRUE, shows detailed output including pandoc commands from rmarkdown::render(). Defaults to FALSE.
 #'
 #' @return A `data.frame` of the register enriched with information from the configuration files of respective CODECHECKs from the online repositories
 #'
@@ -23,6 +24,7 @@
 #' @importFrom rmarkdown render
 #' @importFrom knitr kable
 #' @importFrom utils capture.output read.csv tail packageVersion
+#' @importFrom cli cli_h1 cli_h2 cli_alert_info cli_alert_success cli_alert_warning cli_alert_danger cli_progress_bar cli_progress_update cli_progress_done
 #' @import     jsonlite
 #' @import     dplyr
 #'
@@ -36,13 +38,19 @@ register_render <- function(register = read.csv("register.csv", as.is = TRUE, co
                             from = 1,
                             to = nrow(register),
                             parallel = FALSE,
-                            ncores = NULL) {
-  message("Rendering register using codecheck version ", utils::packageVersion("codecheck"), " from ", from, " to ", to)
+                            ncores = NULL,
+                            verbose = FALSE) {
+  cli::cli_h1("CODECHECK Register Rendering")
+  cli::cli_alert_info("codecheck v{utils::packageVersion('codecheck')} | entries {from} to {to}")
 
-  # Loading config.R files
+  # Loading config.R files (creates CONFIG environment)
   for (i in seq(length(config))) {
     source(config[i])
   }
+
+  # Store verbosity setting in CONFIG for use by all rendering functions
+  # (must be after config sourcing, which creates the CONFIG environment)
+  CONFIG$VERBOSE <- verbose
 
   # Load venues configuration
   load_venues_config(venues_file)
@@ -53,7 +61,7 @@ register_render <- function(register = read.csv("register.csv", as.is = TRUE, co
   # Copy package JavaScript files (citation.js, cert-utils.js, etc.)
   copy_package_javascript()
 
-  message("Using cache path ", R.cache::getCacheRootPath())
+  cli::cli_alert_info("Cache path: {.path {R.cache::getCacheRootPath()}}")
 
   # Get build metadata for footer and meta tags
   build_metadata <- get_build_metadata(".", codecheck_repo_path)
@@ -89,6 +97,7 @@ register_render <- function(register = read.csv("register.csv", as.is = TRUE, co
   generate_sitemap(register_table, filter_by, output_dir = "docs")
   generate_robots_txt(output_dir = "docs")
 
+  cli::cli_alert_success("Register rendering complete")
   invisible(register_table)
 }
 
@@ -114,12 +123,13 @@ register_render <- function(register = read.csv("register.csv", as.is = TRUE, co
 register_check <- function(register = read.csv("register.csv", as.is = TRUE, comment.char = '#'),
                            from = 1,
                            to = nrow(register)) {
-  message("Checking register using codecheck version ", utils::packageVersion("codecheck"), " from ", from, " to ", to)
-  
+  cli::cli_h1("CODECHECK Register Check")
+  cli::cli_alert_info("codecheck v{utils::packageVersion('codecheck')} | entries {from} to {to}")
+
   # Loading config.R file
   source(system.file("extdata", "config.R", package = "codecheck"))
-  
-  message("Using cache path ", R.cache::getCacheRootPath())
+
+  cli::cli_alert_info("Cache path: {.path {R.cache::getCacheRootPath()}}")
   
   for (i in seq(from = from, to = to)) {
     cat("Checking", toString(register[i, ]), "\n")

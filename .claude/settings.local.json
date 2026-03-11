@@ -75,7 +75,13 @@
       "Bash(R -q -e 'tinytest::build_install_test\\(\".\"\\)' 2>&1 | tail -30)",
       "Bash(gh api:*)",
       "WebFetch(domain:cli.r-lib.org)",
-      "WebFetch(domain:daroczig.github.io)"
+      "WebFetch(domain:daroczig.github.io)",
+      "WebFetch(domain:cranlogs.r-pkg.org)",
+      "Bash(R -q -e 'tinytest::build_install_test\\(\".\"\\)' 2>&1 | tail -40)",
+      "Bash(R -q -e 'tinytest::build_install_test\\(\".\"\\)' 2>&1 | grep -A5 \"test_render_json\")",
+      "Bash(R -q -e 'tinytest::build_install_test\\(\".\"\\)' 2>&1 | grep -B2 \"FAIL\")",
+      "Bash(R -q -e 'tinytest::build_install_test\\(\".\"\\)' 2>&1 | grep -i \"fail\\\\|error\\\\|PASS\" | tail -20)",
+      "Bash(R -q -e 'tinytest::build_install_test\\(\".\"\\)' 2>&1 | grep -E \"FAILED|Showing\")"
     ],
     "deny": [],
     "ask": []

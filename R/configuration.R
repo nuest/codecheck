@@ -499,7 +499,7 @@ load_venues_config <- function(venues_file = NULL) {
   # Also store the full venue data including labels for later use
   CONFIG$VENUE_DATA <- venues_data
 
-  message("Loaded ", nrow(venues_data), " venues from ", venues_file)
+  cli::cli_alert_success("Loaded {nrow(venues_data)} venues from {.path {venues_file}}")
 
   return(venues_data)
 }

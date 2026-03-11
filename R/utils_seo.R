@@ -165,7 +165,7 @@ generate_sitemap <- function(register_table,
   sitemap_path <- file.path(output_dir, "sitemap.xml")
   writeLines(xml_lines, sitemap_path)
 
-  message("Generated sitemap.xml with ", length(urls), " URLs at ", sitemap_path)
+  cli::cli_alert_success("Generated sitemap.xml with {length(urls)} URLs at {.path {sitemap_path}}")
   invisible(sitemap_path)
 }
 
@@ -200,6 +200,6 @@ generate_robots_txt <- function(output_dir = "docs",
   robots_path <- file.path(output_dir, "robots.txt")
   writeLines(robots_lines, robots_path)
 
-  message("Generated robots.txt at ", robots_path)
+  cli::cli_alert_success("Generated robots.txt at {.path {robots_path}}")
   invisible(robots_path)
 }

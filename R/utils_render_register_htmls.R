@@ -253,11 +253,13 @@ render_html <- function(table, table_details, filter){
   yaml_path <- normalizePath(file.path(getwd(), output_dir, "html_document.yml"))
 
   # Render HTML from markdown
+  # quiet = !CONFIG$VERBOSE suppresses pandoc command output; use verbose=TRUE in register_render() to see it
   rmarkdown::render(
     input = temp_md_file_path,
     output_file = "index.html",
     output_dir = output_dir,
-    output_yaml = yaml_path
+    output_yaml = yaml_path,
+    quiet = !isTRUE(CONFIG$VERBOSE)
   )
 
   # Remove temporary files (content already embedded in index.html)

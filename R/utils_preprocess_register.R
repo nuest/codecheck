@@ -7,7 +7,7 @@
 #' @export
 register_clear_cache <- function() {
   path <- R.cache::getCacheRootPath()
-  message("Deleting cache path ", path)
+  cli::cli_alert_info("Deleting cache path {.path {path}}")
   unlink(path, recursive = TRUE)
 }
 

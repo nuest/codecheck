@@ -38,7 +38,7 @@ download_cert_pdf <- function(report_link, cert_id){
       download_response <- codecheck_GET(cert_download_url, httr::write_disk(pdf_path, overwrite = TRUE))
 
       if (httr::status_code(download_response) == 200) {
-        message(cert_id, " | Downloaded successfully")
+        cli::cli_alert_success("{cert_id} | Downloaded successfully")
         return(1)
       }
       # Failed to download file

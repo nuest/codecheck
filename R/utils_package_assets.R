@@ -27,5 +27,5 @@ copy_package_javascript <- function(output_dir = "docs") {
     file.copy(js_file, file.path(libs_dir, basename(js_file)), overwrite = TRUE)
   }
 
-  message("Copied ", length(js_files), " JavaScript files to ", libs_dir)
+  cli::cli_alert_success("Copied {length(js_files)} JavaScript file{?s} to {.path {libs_dir}}")
 }

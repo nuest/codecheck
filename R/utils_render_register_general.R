@@ -220,7 +220,7 @@ create_original_register_files <- function(register_table, outputs){
 #' @return None. The function generates files in the specified formats.
 create_register_files <- function(register_table, filter_by, outputs){
 
-  message("[", format(Sys.time(), "%Y-%m-%d %H:%M:%OS3"), "] Starting register file creation")
+  cli::cli_h2("Creating register files")
   start_time_total <- Sys.time()
 
   # Creating the original register file
@@ -229,7 +229,7 @@ create_register_files <- function(register_table, filter_by, outputs){
   # Generating filtered register table files
   # For each filter type we created the nested register tables first
   for (filter in filter_by){
-    message("[", format(Sys.time(), "%Y-%m-%d %H:%M:%OS3"), "] Processing filter: ", filter)
+    cli::cli_alert_info("Processing filter: {.val {filter}}")
     start_time_filter <- Sys.time()
 
     # Checking if the filter is of a known type
@@ -275,16 +275,18 @@ create_register_files <- function(register_table, filter_by, outputs){
         start_time_item <- Sys.time()
         render_register(filtered_table, table_details, filter, output_type)
         elapsed_item <- as.numeric(difftime(Sys.time(), start_time_item, units = "secs"))
-        message("[", format(Sys.time(), "%Y-%m-%d %H:%M:%OS3"), "] Rendered ", filter, " ", register_key, " (", output_type, ") in ", sprintf("%.2f", elapsed_item), " seconds")
+        cli::cli_alert_success("Rendered {filter} {.val {register_key}} ({output_type}) in {sprintf('%.2f', elapsed_item)}s")
       }
     }
 
     elapsed_filter <- as.numeric(difftime(Sys.time(), start_time_filter, units = "secs"))
-    message("[", format(Sys.time(), "%Y-%m-%d %H:%M:%OS3"), "] Completed filter ", filter, " (", length(filtered_register_list), " items x ", length(outputs), " outputs) in ", sprintf("%.2f", elapsed_filter), " seconds")
+    n_items <- length(filtered_register_list)
+    n_outputs <- length(outputs)
+    cli::cli_alert_success("Completed filter {.val {filter}} ({n_items} items x {n_outputs} outputs) in {sprintf('%.1f', elapsed_filter)}s")
   }
 
   elapsed_total <- as.numeric(difftime(Sys.time(), start_time_total, units = "secs"))
-  message("[", format(Sys.time(), "%Y-%m-%d %H:%M:%OS3"), "] Completed all register files in ", sprintf("%.2f", elapsed_total), " seconds")
+  cli::cli_alert_success("Completed all register files in {sprintf('%.1f', elapsed_total)}s")
 }
 
 #' Filter and Drop Columns from Register Table

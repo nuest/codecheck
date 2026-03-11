@@ -143,7 +143,7 @@ generate_footer_build_info <- function(metadata) {
 write_meta_json <- function(metadata, output_path = ".") {
   filepath <- file.path(output_path, ".meta.json")
   jsonlite::write_json(metadata, filepath, pretty = TRUE, auto_unbox = TRUE)
-  message("Build metadata written to ", filepath)
+  cli::cli_alert_success("Build metadata written to {.path {filepath}}")
 }
 
 #' Generate Schema.org JSON-LD for Certificate Page

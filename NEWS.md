@@ -3,6 +3,7 @@
 ## New Features
 
 * **Redirect page for /certs/ directory**: Visiting `/register/certs/` without a certificate ID now redirects to the main register page instead of showing a 404 error (codecheckers/register#166)
+* **Rich logging with cli**: Register rendering now uses the `cli` package for structured, colored output with progress bars, section headers, and semantic alerts (success/info/warning/danger). Pandoc verbose output from `rmarkdown::render()` is suppressed by default; pass `verbose = TRUE` to `register_render()` to enable detailed debugging output
 
 ## Bug Fixes
 
