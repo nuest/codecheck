@@ -79,6 +79,9 @@ register_render <- function(register = read.csv("register.csv", as.is = TRUE, co
     generate_codechecker_redirects(register_table)
   }
 
+  # Generate redirect page for /certs/ (without certificate ID)
+  generate_certs_redirect()
+
   # Write build metadata JSON file
   write_meta_json(build_metadata, "docs")
 

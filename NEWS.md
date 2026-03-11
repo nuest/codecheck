@@ -1,5 +1,9 @@
 # codecheck 0.25.0
 
+## New Features
+
+* **Redirect page for /certs/ directory**: Visiting `/register/certs/` without a certificate ID now redirects to the main register page instead of showing a 404 error (codecheckers/register#166)
+
 ## Bug Fixes
 
 * **Fixed navigation links on venue type pages**: Corrected navigation menu links on venue type-specific pages (e.g., `/venues/institutions/`, `/venues/communities/`). The "All Venues" link now correctly points to `../index.html` (one level up), and "All Codecheckers" link points to `../../codecheckers/index.html` (up two levels then into codecheckers). Previously these links were broken because they were using the generic base_path calculation

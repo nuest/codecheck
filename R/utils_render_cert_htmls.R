@@ -1,3 +1,25 @@
+#' Generate redirect page for /certs/ directory
+#'
+#' Creates an index.html at docs/certs/ that redirects visitors to the main
+#' register page. This handles the case where someone visits /register/certs/
+#' without specifying a certificate ID.
+#'
+#' @seealso \url{https://github.com/codecheckers/register/issues/166}
+generate_certs_redirect <- function() {
+  certs_dir <- CONFIG$CERTS_DIR[["cert"]]
+  if (!dir.exists(certs_dir)) {
+    dir.create(certs_dir, recursive = TRUE)
+  }
+
+  template_path <- system.file("extdata", "templates/general/certs_redirect_template.html",
+                               package = "codecheck")
+  redirect_html <- readLines(template_path, warn = FALSE)
+  redirect_file <- file.path(certs_dir, "index.html")
+  writeLines(redirect_html, redirect_file)
+
+  message("Created redirect page at ", redirect_file)
+}
+
 #' Generates HTML files for each certificate listed in the given register table.
 #' It checks for the existence of the certificate PDF, downloads it if necessary, and
 #' converts it to JPEG format for embedding.
