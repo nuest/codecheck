@@ -14,7 +14,8 @@ register_render(
   from = 1,
   to = nrow(register),
   parallel = FALSE,
-  ncores = NULL
+  ncores = NULL,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ register_render(
 \item{parallel}{Logical; if TRUE, renders certificates in parallel using multiple cores. Defaults to FALSE.}
 
 \item{ncores}{Integer; number of CPU cores to use for parallel rendering. If NULL, automatically detects available cores minus 1. Defaults to NULL.}
+
+\item{verbose}{Logical; if TRUE, shows detailed output including pandoc commands from rmarkdown::render(). Defaults to FALSE.}
 }
 \value{
 A `data.frame` of the register enriched with information from the configuration files of respective CODECHECKs from the online repositories

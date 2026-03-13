@@ -4,7 +4,12 @@
 \alias{render_register_json}
 \title{Renders register json for a single register_table}
 \usage{
-render_register_json(register_table, table_details, filter)
+render_register_json(
+  register_table,
+  table_details,
+  filter,
+  full_register_table = NULL
+)
 }
 \arguments{
 \item{register_table}{The register table}
@@ -12,6 +17,9 @@ render_register_json(register_table, table_details, filter)
 \item{table_details}{List containing details such as the table name, subcat name.}
 
 \item{filter}{The filter}
+
+\item{full_register_table}{Optional full preprocessed register table for computing
+annual statistics (only used for the main register stats.json)}
 }
 \description{
 Renders register json for a single register_table
