@@ -122,6 +122,8 @@ under the MIT license, see file `LICENSE`.
   : Function for adding clickable links to the paper for each entry in
   the register table and add certificate identifier and link as extra
   columns
+- [`add_cert_pdf_links()`](http://codecheck.org.uk/codecheck/reference/add_cert_pdf_links.md)
+  : Add certificate PDF download URLs to the register table
 - [`add_check_time()`](http://codecheck.org.uk/codecheck/reference/add_check_time.md)
   : Function for adding check time to each report in the register table.
 - [`add_codecheck_details_md()`](http://codecheck.org.uk/codecheck/reference/add_codecheck_details_md.md)
@@ -184,11 +186,15 @@ under the MIT license, see file `LICENSE`.
   thrown stating that the issue is still open.
 - [`cite_certificate()`](http://codecheck.org.uk/codecheck/reference/cite_certificate.md)
   : Print a citation for the codecheck certificate.
+- [`codecheck_GET()`](http://codecheck.org.uk/codecheck/reference/codecheck_GET.md)
+  : Custom HTTP GET with proper User-Agent header
 - [`codecheck_metadata()`](http://codecheck.org.uk/codecheck/reference/codecheck_metadata.md)
   : Return the metadata for the codecheck project in root folder of
   project
 - [`complete_codecheck_yml()`](http://codecheck.org.uk/codecheck/reference/complete_codecheck_yml.md)
   : Analyze and complete codecheck.yml with missing fields
+- [`compute_annual_stats()`](http://codecheck.org.uk/codecheck/reference/compute_annual_stats.md)
+  : Compute annual statistics from the register table
 - [`convert_cert_pdf_to_png()`](http://codecheck.org.uk/codecheck/reference/convert_cert_pdf_to_png.md)
   : Converts each page of a certificate PDF to JPEG format images,
   saving them in the specified certificate directory.
@@ -240,6 +246,8 @@ under the MIT license, see file `LICENSE`.
   : Create Venue Type-Specific Tables
 - [`create_venues_tables()`](http://codecheck.org.uk/codecheck/reference/create_venues_tables.md)
   : Create Venues Tables
+- [`detect_report_platform()`](http://codecheck.org.uk/codecheck/reference/detect_report_platform.md)
+  : Detect the publication platform from a report URL
 - [`download_cert_pdf()`](http://codecheck.org.uk/codecheck/reference/download_cert_pdf.md)
   : Downloads a certificate PDF from a report link and saves it locally.
   If the download link is a ZIP file, it extracts the PDF from the
@@ -260,6 +268,8 @@ under the MIT license, see file `LICENSE`.
   : Generates a JSON file with all certificate metadata
 - [`generate_cert_schema_org()`](http://codecheck.org.uk/codecheck/reference/generate_cert_schema_org.md)
   : Generate Schema.org JSON-LD for Certificate Page
+- [`generate_certs_redirect()`](http://codecheck.org.uk/codecheck/reference/generate_certs_redirect.md)
+  : Generate redirect page for /certs/ directory
 - [`generate_codechecker_profile_links()`](http://codecheck.org.uk/codecheck/reference/generate_codechecker_profile_links.md)
   : Generate HTML for codechecker profile links
 - [`generate_codechecker_redirect()`](http://codecheck.org.uk/codecheck/reference/generate_codechecker_redirect.md)
@@ -389,6 +399,8 @@ under the MIT license, see file `LICENSE`.
   : Function for clearing the register cache
 - [`register_render()`](http://codecheck.org.uk/codecheck/reference/register_render.md)
   : Function for rendering the register into different view
+- [`register_update_stats()`](http://codecheck.org.uk/codecheck/reference/register_update_stats.md)
+  : Regenerate all stats.json files from existing register.json files
 - [`render_cert_html()`](http://codecheck.org.uk/codecheck/reference/render_cert_html.md)
   : Renders an HTML certificate file from a Markdown template for a
   specific certificate.
