@@ -15,9 +15,22 @@
   is suppressed by default; pass `verbose = TRUE` to
   [`register_render()`](http://codecheck.org.uk/codecheck/reference/register_render.md)
   to enable detailed debugging output
+- **Warnings captured and shown as log entries**: All R warnings emitted
+  during
+  [`register_render()`](http://codecheck.org.uk/codecheck/reference/register_render.md)
+  are now captured and displayed as structured `cli` warning entries at
+  the end of rendering, deduplicated with occurrence counts. This
+  replaces R’s default “There were N warnings (use warnings() to see
+  them)” prompt which was impossible to act on after the R session ended
 
 ### Bug Fixes
 
+- **Fixed stray libs/ folders from parallel rendering**: Parallel
+  certificate rendering (`mclapply` forking) could leave behind stray
+  `libs/` directories in certificate folders due to pandoc temp file
+  conflicts between forked processes sharing the same `/tmp` directory.
+  A post-render cleanup sweep now automatically removes these stray
+  folders after parallel rendering completes
 - **Fixed navigation links on venue type pages**: Corrected navigation
   menu links on venue type-specific pages (e.g.,
   `/venues/institutions/`, `/venues/communities/`). The “All Venues”
