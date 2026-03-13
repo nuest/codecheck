@@ -104,7 +104,8 @@ render_register_json <- function(register_table, table_details, filter) {
   jsonlite::write_json(
     register_table_json[, columns_to_keep],
     path = file.path(output_dir, "register.json"),
-    pretty = TRUE
+    pretty = TRUE,
+    na = "null"
   )
 
   # featured.json: sorted by check date (most recent first)
@@ -116,7 +117,8 @@ render_register_json <- function(register_table, table_details, filter) {
   jsonlite::write_json(
     utils::head(featured_table, CONFIG$FEATURED_COUNT)[, columns_to_keep],
     path = file.path(output_dir, "featured.json"),
-    pretty = TRUE
+    pretty = TRUE,
+    na = "null"
   )
 
   jsonlite::write_json(

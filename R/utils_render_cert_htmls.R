@@ -228,6 +228,21 @@ render_cert_htmls <- function(register_table, force_download = FALSE, parallel =
     theoretical_speedup <- nrow(register_table) * avg_time / elapsed_total
     efficiency <- theoretical_speedup / ncores
     cli::cli_alert_info("Speedup: {sprintf('%.2fx', theoretical_speedup)} | Efficiency: {sprintf('%.1f%%', efficiency * 100)}")
+
+    # Clean up stray libs/ folders left behind by parallel rendering.
+    # In parallel mode, forked processes share /tmp, causing occasional pandoc
+    # temp file conflicts. When rmarkdown::render() fails mid-render, the libs/
+    # folder it created isn't cleaned up because the error skips unlink().
+    certs_base <- CONFIG$CERTS_DIR[["cert"]]
+    cert_dirs <- list.dirs(certs_base, recursive = FALSE)
+    stray_libs <- file.path(cert_dirs, "libs")
+    stray_libs <- stray_libs[dir.exists(stray_libs)]
+    if (length(stray_libs) > 0) {
+      for (lib_dir in stray_libs) {
+        unlink(lib_dir, recursive = TRUE)
+      }
+      cli::cli_alert_warning("Cleaned up {length(stray_libs)} stray libs/ folder{?s} from parallel rendering")
+    }
   }
 }
 

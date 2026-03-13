@@ -43,59 +43,88 @@ register_render <- function(register = read.csv("register.csv", as.is = TRUE, co
   cli::cli_h1("CODECHECK Register Rendering")
   cli::cli_alert_info("codecheck v{utils::packageVersion('codecheck')} | entries {from} to {to}")
 
-  # Loading config.R files (creates CONFIG environment)
-  for (i in seq(length(config))) {
-    source(config[i])
+  # Capture all warnings so they can be shown as structured log entries at the
+  # end, rather than R's default "There were N warnings" prompt.
+  captured_warnings <- character(0)
+
+  register_table <- withCallingHandlers(
+    {
+      # Loading config.R files (creates CONFIG environment)
+      for (i in seq(length(config))) {
+        source(config[i])
+      }
+
+      # Store verbosity setting in CONFIG for use by all rendering functions
+      # (must be after config sourcing, which creates the CONFIG environment)
+      CONFIG$VERBOSE <- verbose
+
+      # Load venues configuration
+      load_venues_config(venues_file)
+
+      # Setup external libraries locally (Bootstrap, Font Awesome, Academicons, etc.)
+      setup_external_libraries()
+
+      # Copy package JavaScript files (citation.js, cert-utils.js, etc.)
+      copy_package_javascript()
+
+      cli::cli_alert_info("Cache path: {.path {R.cache::getCacheRootPath()}}")
+
+      # Get build metadata for footer and meta tags
+      build_metadata <- get_build_metadata(".", codecheck_repo_path)
+      CONFIG$BUILD_METADATA <- build_metadata
+
+      register <- register[(from:to),]
+
+      register_table <- preprocess_register(register, filter_by)
+      # Setting number of codechecks now for later use. This is done to avoid double counting codechecks
+      # done by multiple authors.
+      CONFIG$NO_CODECHECKS <- nrow(register_table)
+
+      if("html" %in% outputs) {
+        render_cert_htmls(register_table, force_download = FALSE, parallel = parallel, ncores = ncores)
+      }
+
+      create_filtered_reg_csvs(register_table, filter_by)
+      create_register_files(register_table, filter_by, outputs)
+      create_non_register_files(register_table, filter_by)
+
+      # Generate redirect pages for codecheckers with ORCID
+      if ("codecheckers" %in% filter_by) {
+        generate_codechecker_redirects(register_table)
+      }
+
+      # Generate redirect page for /certs/ (without certificate ID)
+      generate_certs_redirect()
+
+      # Write build metadata JSON file
+      write_meta_json(build_metadata, "docs")
+
+      # Generate SEO files (sitemap.xml and robots.txt)
+      generate_sitemap(register_table, filter_by, output_dir = "docs")
+      generate_robots_txt(output_dir = "docs")
+
+      register_table
+    },
+    warning = function(w) {
+      captured_warnings <<- c(captured_warnings, conditionMessage(w))
+      invokeRestart("muffleWarning")
+    }
+  )
+
+  # Display captured warnings as structured log entries
+  if (length(captured_warnings) > 0) {
+    # Deduplicate with counts: show each unique warning once, with [xN] prefix if repeated
+    warn_table <- sort(table(captured_warnings), decreasing = TRUE)
+    cli::cli_h2("{length(captured_warnings)} warning{?s} ({length(warn_table)} unique)")
+    for (msg in names(warn_table)) {
+      count <- warn_table[[msg]]
+      if (count > 1) {
+        cli::cli_alert_warning("[x{count}] {msg}")
+      } else {
+        cli::cli_alert_warning("{msg}")
+      }
+    }
   }
-
-  # Store verbosity setting in CONFIG for use by all rendering functions
-  # (must be after config sourcing, which creates the CONFIG environment)
-  CONFIG$VERBOSE <- verbose
-
-  # Load venues configuration
-  load_venues_config(venues_file)
-
-  # Setup external libraries locally (Bootstrap, Font Awesome, Academicons, etc.)
-  setup_external_libraries()
-
-  # Copy package JavaScript files (citation.js, cert-utils.js, etc.)
-  copy_package_javascript()
-
-  cli::cli_alert_info("Cache path: {.path {R.cache::getCacheRootPath()}}")
-
-  # Get build metadata for footer and meta tags
-  build_metadata <- get_build_metadata(".", codecheck_repo_path)
-  CONFIG$BUILD_METADATA <- build_metadata
-
-  register <- register[(from:to),]
-
-  register_table <- preprocess_register(register, filter_by)
-  # Setting number of codechecks now for later use. This is done to avoid double counting codechecks
-  # done by multiple authors.
-  CONFIG$NO_CODECHECKS <- nrow(register_table)
-
-  if("html" %in% outputs) {
-    render_cert_htmls(register_table, force_download = FALSE, parallel = parallel, ncores = ncores)
-  }
-
-  create_filtered_reg_csvs(register_table, filter_by)
-  create_register_files(register_table, filter_by, outputs)
-  create_non_register_files(register_table, filter_by)
-
-  # Generate redirect pages for codecheckers with ORCID
-  if ("codecheckers" %in% filter_by) {
-    generate_codechecker_redirects(register_table)
-  }
-
-  # Generate redirect page for /certs/ (without certificate ID)
-  generate_certs_redirect()
-
-  # Write build metadata JSON file
-  write_meta_json(build_metadata, "docs")
-
-  # Generate SEO files (sitemap.xml and robots.txt)
-  generate_sitemap(register_table, filter_by, output_dir = "docs")
-  generate_robots_txt(output_dir = "docs")
 
   cli::cli_alert_success("Register rendering complete")
   invisible(register_table)

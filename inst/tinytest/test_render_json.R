@@ -4,14 +4,13 @@ test_path <- "register/short.csv"
 test_register <- read.csv(test_path)
 venues_path <- "register/venues.csv"
 
-expect_silent({ capture.output(
-  {
+capture.output(
+  suppressWarnings(
     table <- register_render(register = test_register, filter_by = c(), outputs = c("json"),
                             venues_file = venues_path)
-  },
+  ),
   type = "message"
-  )
-  })
+)
 
 # file generation ----
 expect_true(file.exists(file.path("docs/register.json")))
