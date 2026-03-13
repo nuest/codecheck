@@ -175,7 +175,7 @@ compute_annual_stats <- function(register_table) {
     stats$venues_cumulative <- as.list(venues_cumulative)
   }
 
-  # --- Unique codecheckers per year (annual + cumulative, list column) ---
+  # --- Unique codecheckers: total count + per year + cumulative (addresses register#77) ---
   if ("Codechecker" %in% names(register_table)) {
     checkers <- register_table$Codechecker[valid]
     yr <- years[valid]
@@ -185,6 +185,7 @@ compute_annual_stats <- function(register_table) {
       data.frame(year = yr[i], codechecker = cc, stringsAsFactors = FALSE)
     }))
     if (!is.null(pairs) && nrow(pairs) > 0) {
+      stats$codechecker_count <- length(unique(pairs$codechecker))
       codecheckers_by_year <- tapply(pairs$codechecker, pairs$year, function(cc) length(unique(cc)))
       stats$codecheckers_per_year <- as.list(codecheckers_by_year[all_years[all_years %in% names(codecheckers_by_year)]])
 

@@ -161,6 +161,15 @@ register_update_stats <- function(docs_dir = "docs",
   annual <- compute_annual_stats(main_data)
   stats_data <- c(stats_data, annual)
 
+  # Add codechecker_count from codecheckers index.json if available (addresses register#77)
+  cc_index_path <- file.path(docs_dir, "codecheckers", "index.json")
+  if (is.null(stats_data$codechecker_count) && file.exists(cc_index_path)) {
+    cc_index <- tryCatch(jsonlite::fromJSON(cc_index_path), error = function(e) NULL)
+    if (!is.null(cc_index)) {
+      stats_data$codechecker_count <- nrow(cc_index)
+    }
+  }
+
   jsonlite::write_json(stats_data, auto_unbox = TRUE,
                        path = file.path(docs_dir, "stats.json"), pretty = TRUE)
   cli::cli_alert_success("Updated {.path {file.path(docs_dir, 'stats.json')}} ({nrow(main_data)} certs)")
