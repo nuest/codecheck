@@ -203,7 +203,7 @@ create_original_register_files <- function(register_table, outputs){
   for (output_type in outputs){
     table_details <- list(is_reg_table = TRUE)
     table_details[["output_dir"]] <- generate_output_dir(filter, table_details)
-    render_register(register_table, table_details, filter, output_type)
+    render_register(register_table, table_details, filter, output_type, full_register_table = register_table)
   }
 }
 
@@ -401,7 +401,7 @@ generate_table_details <- function(table_key, table, filter, is_reg_table = TRUE
 #'        "csv" for CSVs, "md" for MD and "html" for HTMLs.
 #'
 #' @return None. The function generates a file in the specified format.
-render_register <- function(register_table, table_details, filter = NA, output_type){
+render_register <- function(register_table, table_details, filter = NA, output_type, full_register_table = NULL){
   # Sort by certificate identifier for consistent ordering across all outputs
   # (addresses codecheckers/register#160)
   if ("Certificate" %in% names(register_table)) {
@@ -413,7 +413,7 @@ render_register <- function(register_table, table_details, filter = NA, output_t
   switch(output_type,
     "md" = render_register_md(register_table, table_details, filter),
     "html" = render_html(register_table, table_details, filter),
-    "json" = render_register_json(register_table, table_details, filter)
+    "json" = render_register_json(register_table, table_details, filter, full_register_table)
   )
 }
 

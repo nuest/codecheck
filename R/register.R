@@ -130,6 +130,71 @@ register_render <- function(register = read.csv("register.csv", as.is = TRUE, co
   invisible(register_table)
 }
 
+#' Regenerate all stats.json files from existing register.json files
+#'
+#' Fast alternative to a full re-render when only the stats computation has
+#' changed. Reads the already-generated register.json files under `docs/` and
+#' rewrites every stats.json with up-to-date statistics (including annual and
+#' cumulative breakdowns).
+#'
+#' @param docs_dir Path to the docs output directory (default: "docs")
+#' @param config Path to the config.R file
+#'
+#' @author Daniel Nuest
+#' @export
+register_update_stats <- function(docs_dir = "docs",
+                                  config = system.file("extdata", "config.R", package = "codecheck")) {
+  cli::cli_h1("CODECHECK Stats Update")
+  source(config)
+
+  main_json_path <- file.path(docs_dir, "register.json")
+  if (!file.exists(main_json_path)) {
+    stop("No register.json found at ", main_json_path, ". Run register_render() first.")
+  }
+
+  # --- Main register stats ---
+  main_data <- jsonlite::fromJSON(main_json_path)
+  stats_data <- list(
+    source = paste0(CONFIG$HREF_DETAILS$json$base_url, "register", CONFIG$HREF_DETAILS$json$ext),
+    cert_count = nrow(main_data)
+  )
+  annual <- compute_annual_stats(main_data)
+  stats_data <- c(stats_data, annual)
+
+  jsonlite::write_json(stats_data, auto_unbox = TRUE,
+                       path = file.path(docs_dir, "stats.json"), pretty = TRUE)
+  cli::cli_alert_success("Updated {.path {file.path(docs_dir, 'stats.json')}} ({nrow(main_data)} certs)")
+
+  # --- Sub-register stats (venues, codecheckers, etc.) ---
+  sub_jsons <- list.files(docs_dir, pattern = "^register\\.json$",
+                          recursive = TRUE, full.names = TRUE)
+  # Exclude the main register.json already handled above (normalize both sides)
+  main_norm <- normalizePath(main_json_path, mustWork = FALSE)
+  sub_jsons <- sub_jsons[normalizePath(sub_jsons, mustWork = FALSE) != main_norm]
+
+  updated <- 0L
+  for (json_path in sub_jsons) {
+    sub_dir <- dirname(json_path)
+    sub_data <- tryCatch(jsonlite::fromJSON(json_path), error = function(e) NULL)
+    if (is.null(sub_data) || nrow(sub_data) == 0) next
+
+    # Reconstruct the source URL from the relative path under docs/
+    rel_path <- gsub(paste0("^", gsub("([.\\\\])", "\\\\\\1", docs_dir), "/?"), "", sub_dir)
+    source_url <- paste0(CONFIG$HREF_DETAILS$json$base_url, rel_path, "/register.json")
+
+    sub_stats <- list(
+      source = source_url,
+      cert_count = nrow(sub_data)
+    )
+
+    jsonlite::write_json(sub_stats, auto_unbox = TRUE,
+                         path = file.path(sub_dir, "stats.json"), pretty = TRUE)
+    updated <- updated + 1L
+  }
+
+  cli::cli_alert_success("Updated {updated} sub-register stats.json files")
+}
+
 #' Function for checking all entries in the register
 #'
 #' This functions starts of a `data.frame` read from the local register file.
