@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils_render_cert_md.R
 \name{get_abstract_text_crossref}
 \alias{get_abstract_text_crossref}
-\title{Extracts the paper DOI from the config_yml of the paper, 
+\title{Extracts the paper DOI from the config_yml of the paper,
 constructs a CrossRef API request, and returns the abstract text if available.}
 \usage{
 get_abstract_text_crossref(register_repo)
@@ -14,6 +14,6 @@ get_abstract_text_crossref(register_repo)
 The abstract text as a string if available; otherwise, NULL.
 }
 \description{
-Extracts the paper DOI from the config_yml of the paper, 
+Extracts the paper DOI from the config_yml of the paper,
 constructs a CrossRef API request, and returns the abstract text if available.
 }

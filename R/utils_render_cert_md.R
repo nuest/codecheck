@@ -132,7 +132,70 @@ get_abstract_text_openalex <- function(register_repo){
   return(abstract)
 }
 
-#' Extracts the paper DOI from the config_yml of the paper, 
+#' Look up the OpenAlex work ID for a paper reference URL
+#'
+#' Queries the OpenAlex API by DOI. If the DOI lookup fails, falls back to
+#' a title search filtered by first author name (accepts only a single exact match).
+#'
+#' @param paper_reference The paper reference URL (typically a DOI URL)
+#' @param paper_title Optional paper title for fallback search
+#' @param first_author_name Optional first author name for fallback search
+#' @return The OpenAlex work URL (e.g., "https://openalex.org/W1234567890") or NA_character_
+get_openalex_id <- function(paper_reference, paper_title = NULL, first_author_name = NULL) {
+  if (is.null(paper_reference) || is.na(paper_reference) || nchar(paper_reference) == 0) {
+    return(NA_character_)
+  }
+
+  # Try DOI-based lookup first
+  api_url <- paste0(CONFIG$CERT_LINKS[["openalex_api"]], gsub("\\n", "", paper_reference))
+  response <- tryCatch(codecheck_GET(api_url), error = function(e) NULL)
+
+  if (!is.null(response) && httr::status_code(response) != 200) {
+    # Follow redirects (some DOIs redirect)
+    redirect_url <- response$url
+    if (!is.null(redirect_url) && redirect_url != api_url) {
+      api_url2 <- paste0(CONFIG$CERT_LINKS[["openalex_api"]], redirect_url)
+      response <- tryCatch(codecheck_GET(api_url2), error = function(e) NULL)
+    }
+  }
+
+  if (!is.null(response) && httr::status_code(response) == 200) {
+    data <- httr::content(response, "parsed")
+    if (!is.null(data$id)) {
+      return(data$id)
+    }
+  }
+
+  # Fallback: search by title and first author
+  if (!is.null(paper_title) && nchar(paper_title) > 0) {
+    search_url <- paste0(
+      "https://api.openalex.org/works?filter=title.search:",
+      utils::URLencode(paper_title, reserved = TRUE)
+    )
+    if (!is.null(first_author_name) && nchar(first_author_name) > 0) {
+      search_url <- paste0(
+        search_url,
+        ",authorships.author.display_name:",
+        utils::URLencode(first_author_name, reserved = TRUE)
+      )
+    }
+    search_response <- tryCatch(codecheck_GET(search_url), error = function(e) NULL)
+    if (!is.null(search_response) && httr::status_code(search_response) == 200) {
+      search_data <- httr::content(search_response, "parsed")
+      if (!is.null(search_data$meta$count) && search_data$meta$count == 1) {
+        return(search_data$results[[1]]$id)
+      }
+    }
+  }
+
+  return(NA_character_)
+}
+
+#' Cached version of get_openalex_id
+#' @noRd
+get_openalex_id_cached <- R.cache::addMemoization(get_openalex_id)
+
+#' Extracts the paper DOI from the config_yml of the paper,
 #' constructs a CrossRef API request, and returns the abstract text if available.
 #'
 #' @param register_repo URL or path to the repository containing the paper's configuration.
@@ -302,6 +365,22 @@ add_paper_details_md <- function(md_content, repo_link, download_cert_status){
 
   # Adding abstract
   md_content <- add_abstract(repo_link, md_content)
+
+  # Adding OpenAlex link (addresses register#185)
+  openalex_id <- tryCatch(
+    get_openalex_id_cached(
+      config_yml$paper$reference,
+      paper_title = config_yml$paper$title,
+      first_author_name = if (length(config_yml$paper$authors) > 0) config_yml$paper$authors[[1]]$name else NULL
+    ),
+    error = function(e) NA_character_
+  )
+  if (!is.na(openalex_id)) {
+    openalex_html <- paste0('<p><strong>OpenAlex</strong>: <a href="', openalex_id, '">', openalex_id, '</a></p>')
+  } else {
+    openalex_html <- ""
+  }
+  md_content <- gsub("\\$openalex_link\\$", openalex_html, md_content)
 
   return(md_content)
 }

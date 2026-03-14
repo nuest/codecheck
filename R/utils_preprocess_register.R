@@ -228,6 +228,45 @@ create_temp_register_with_codechecker <- function(register_table){
   write.csv(register_table, CONFIG$DIR_TEMP_REGISTER_CODECHECKER)
 }
 
+#' Add OpenAlex work IDs to the register table (addresses register#185)
+#'
+#' @param register_table The register table
+#' @param register The register from the register.csv file
+#' @return The register table with added "OpenAlex" column
+add_openalex_ids <- function(register_table, register) {
+  cli::cli_alert_info("Looking up OpenAlex IDs")
+  openalex_ids <- c()
+
+  for (i in seq_len(nrow(register))) {
+    config_yml <- get_codecheck_yml(register[i, ]$Repo)
+
+    openalex_id <- NA_character_
+    if (!is.null(config_yml) && !is.null(config_yml$paper$reference)) {
+      first_author <- NULL
+      if (!is.null(config_yml$paper$authors) && length(config_yml$paper$authors) > 0) {
+        first_author <- config_yml$paper$authors[[1]]$name
+      }
+      openalex_id <- tryCatch(
+        get_openalex_id_cached(
+          config_yml$paper$reference,
+          paper_title = config_yml$paper$title,
+          first_author_name = first_author
+        ),
+        error = function(e) {
+          warning(register[i, ]$Certificate, " | OpenAlex lookup failed: ", e$message)
+          NA_character_
+        }
+      )
+    }
+    openalex_ids <- c(openalex_ids, openalex_id)
+  }
+
+  register_table$OpenAlex <- openalex_ids
+  n_found <- sum(!is.na(openalex_ids))
+  cli::cli_alert_success("Found {n_found}/{nrow(register)} OpenAlex IDs")
+  return(register_table)
+}
+
 #' Function for preprocessing the register to create and return the preprocessed register table.
 #' 
 #' @param register The register.
@@ -246,6 +285,7 @@ preprocess_register <- function(register, filter_by) {
     register_table <- add_issue_number_links(register_table, register)
     register_table <- add_check_time(register_table, register)
     register_table <- add_paper_links(register_table, register)
+    register_table <- add_openalex_ids(register_table, register)
 
     # Create temp register CSV after all enrichment is complete
     # This ensures the CSV has all enriched columns for codechecker filtering

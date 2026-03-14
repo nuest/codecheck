@@ -45,6 +45,7 @@ title: $title$
   <p>$abstract_content$</p>
   </div>
   </div>
+  $openalex_link$
   </div>
 
   </div>

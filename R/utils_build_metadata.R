@@ -182,12 +182,29 @@ generate_cert_schema_org <- function(cert_id, config_yml, abstract_data = NULL) 
     paper$abstract <- abstract_data$text
   }
 
-  # Add paper URL/DOI
+  # Add paper URL/DOI and OpenAlex identifier (addresses register#185)
   if (!is.null(config_yml$paper$reference) && config_yml$paper$reference != "") {
     paper$url <- config_yml$paper$reference
-    # If it's a DOI, also add sameAs
+    same_as <- c()
     if (grepl("doi.org", config_yml$paper$reference)) {
-      paper$sameAs <- config_yml$paper$reference
+      same_as <- c(same_as, config_yml$paper$reference)
+    }
+    # Add OpenAlex identifier
+    openalex_id <- tryCatch(
+      get_openalex_id_cached(
+        config_yml$paper$reference,
+        paper_title = config_yml$paper$title,
+        first_author_name = if (length(config_yml$paper$authors) > 0) config_yml$paper$authors[[1]]$name else NULL
+      ),
+      error = function(e) NA_character_
+    )
+    if (!is.na(openalex_id)) {
+      same_as <- c(same_as, openalex_id)
+    }
+    if (length(same_as) == 1) {
+      paper$sameAs <- same_as
+    } else if (length(same_as) > 1) {
+      paper$sameAs <- same_as
     }
   }
 

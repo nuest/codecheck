@@ -33,24 +33,24 @@ CONFIG$REGISTER_COLUMNS <- list(
   default = list(
     html = c("Certificate", "Report", "Paper Title", "Venue", "Type", "Check date"),
     md = c("Certificate", "Report", "Paper Title", "Venue", "Type", "Check date"),
-    csv = c("Certificate ID", "Certificate Link", "Repository", "Repository Link", "Report", "Title", "Paper reference", "Type", "Venue", "Check date"),
-    json = c("Certificate ID", "Certificate Link", "Repository", "Repository Link", "Report", "Title", "Paper reference", "Type", "Venue", "Check date")
+    csv = c("Certificate ID", "Certificate Link", "Repository", "Repository Link", "Report", "Title", "Paper reference", "OpenAlex", "Type", "Venue", "Check date"),
+    json = c("Certificate ID", "Certificate Link", "Repository", "Repository Link", "Report", "Title", "Paper reference", "OpenAlex", "Type", "Venue", "Check date")
   ),
 
   # Venue-specific views (venue and type are redundant in page context)
   venues = list(
     html = c("Certificate", "Report", "Paper Title", "Check date"),
     md = c("Certificate", "Report", "Paper Title", "Check date"),
-    csv = c("Certificate ID", "Certificate Link", "Repository", "Repository Link", "Report", "Title", "Paper reference", "Check date"),
-    json = c("Certificate ID", "Certificate Link", "Repository", "Repository Link", "Report", "Title", "Paper reference", "Check date")
+    csv = c("Certificate ID", "Certificate Link", "Repository", "Repository Link", "Report", "Title", "Paper reference", "OpenAlex", "Check date"),
+    json = c("Certificate ID", "Certificate Link", "Repository", "Repository Link", "Report", "Title", "Paper reference", "OpenAlex", "Check date")
   ),
 
   # Codechecker-specific views (codechecker is redundant in page context)
   codecheckers = list(
     html = c("Certificate", "Report", "Paper Title", "Venue", "Type", "Check date"),
     md = c("Certificate", "Report", "Paper Title", "Venue", "Type", "Check date"),
-    csv = c("Certificate ID", "Certificate Link", "Repository", "Repository Link", "Report", "Title", "Paper reference", "Venue", "Type", "Check date"),
-    json = c("Certificate ID", "Certificate Link", "Repository", "Repository Link", "Report", "Title", "Paper reference", "Venue", "Type", "Check date")
+    csv = c("Certificate ID", "Certificate Link", "Repository", "Repository Link", "Report", "Title", "Paper reference", "OpenAlex", "Venue", "Type", "Check date"),
+    json = c("Certificate ID", "Certificate Link", "Repository", "Repository Link", "Report", "Title", "Paper reference", "OpenAlex", "Venue", "Type", "Check date")
   )
 )
 
@@ -280,6 +280,7 @@ CONFIG$JSON_COLUMNS <- c(
   "Report",
   "Title",
   "Paper reference",
+  "OpenAlex",
   "Type",
   "Venue",
   "Check date"
