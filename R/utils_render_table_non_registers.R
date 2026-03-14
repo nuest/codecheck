@@ -171,7 +171,7 @@ render_non_register_md <- function(table, table_details, filter){
     "codecheckers" = add_all_codecheckers_hyperlink(table, table_details)
   )
 
-  table <- kable(table)
+  table <- kable(table, format = "markdown")
   # Creating and adjusting the markdown table
   md_table <- readLines(CONFIG$TEMPLATE_DIR[["non_reg"]][["md_template"]])
   md_table <- gsub("\\$title\\$", table_details[["title"]], md_table)

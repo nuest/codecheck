@@ -243,6 +243,17 @@ render_cert_htmls <- function(register_table, force_download = FALSE, parallel =
       }
       cli::cli_alert_warning("Cleaned up {length(stray_libs)} stray libs/ folder{?s} from parallel rendering")
     }
+
+    # Clean up stray temporary HTML files left behind by failed renders
+    stray_temp_names <- c("index_header.html", "index_prefix.html", "index_postfix.html", "html_document.yml", "temp.md")
+    stray_temps <- unlist(lapply(cert_dirs, function(d) {
+      files <- file.path(d, stray_temp_names)
+      files[file.exists(files)]
+    }))
+    if (length(stray_temps) > 0) {
+      file.remove(stray_temps)
+      cli::cli_alert_warning("Cleaned up {length(stray_temps)} stray temporary file{?s} from parallel rendering")
+    }
   }
 }
 
@@ -283,6 +294,14 @@ render_cert_html <- function(cert_id, repo_link, download_cert_status, cert_type
   create_cert_page_section_files(output_dir, cert_id, cert_type, cert_venue, repo_link)
   generate_html_document_yml(output_dir)
 
+  # Schedule cleanup of temporary files so they are removed even if render() fails
+  temp_files <- file.path(output_dir, c("temp.md", "index_header.html", "index_prefix.html", "index_postfix.html", "html_document.yml"))
+  on.exit({
+    for (f in temp_files) {
+      if (file.exists(f)) file.remove(f)
+    }
+  }, add = TRUE)
+
   yaml_path <- normalizePath(file.path(getwd(), file.path(output_dir, "html_document.yml")))
 
   # Render HTML from markdown
@@ -294,13 +313,6 @@ render_cert_html <- function(cert_id, repo_link, download_cert_status, cert_type
     output_yaml = yaml_path,
     quiet = !isTRUE(CONFIG$VERBOSE)
   )
-
-  # Remove temporary files (content already embedded in index.html)
-  file.remove(temp_md_path)
-  file.remove(file.path(output_dir, "index_header.html"))
-  file.remove(file.path(output_dir, "index_prefix.html"))
-  file.remove(file.path(output_dir, "index_postfix.html"))
-  file.remove(file.path(output_dir, "html_document.yml"))
 
   # Adjusting the path to the libs folder in the html itself
   # so that the path to the libs folder refers to the libs folder "docs/libs".
@@ -382,6 +394,19 @@ generate_cert_json <- function(cert_id, repo_link, cert_type, cert_venue) {
   # Add manifest if it exists
   if ("manifest" %in% names(config_yml) && !is.null(config_yml$manifest)) {
     cert_json$codecheck$manifest <- config_yml$manifest
+  }
+
+  # Add OpenAlex link (addresses register#185)
+  openalex_id <- tryCatch(
+    get_openalex_id_cached(
+      config_yml$paper$reference,
+      paper_title = config_yml$paper$title,
+      first_author_name = if (length(config_yml$paper$authors) > 0) config_yml$paper$authors[[1]]$name else NULL
+    ),
+    error = function(e) NA_character_
+  )
+  if (!is.na(openalex_id)) {
+    cert_json$paper$openalex <- openalex_id
   }
 
   # Write JSON file

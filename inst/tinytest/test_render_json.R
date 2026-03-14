@@ -70,21 +70,37 @@ expect_equal(sapply(register, "[[", "Certificate ID"), test_register$Certificate
 expect_true(file.exists("docs/register-full.json"), info = "register-full.json exists")
 expect_true(file.exists("docs/register-full.csv"), info = "register-full.csv exists")
 
-full_json <- jsonlite::fromJSON("docs/register-full.json")
-expect_equal(nrow(full_json), nrow(test_register), info = "register-full.json has all entries")
+full_json <- jsonlite::read_json("docs/register-full.json")
+expect_equal(length(full_json), nrow(test_register), info = "register-full.json has all entries")
 # Should be sorted by Certificate ID
-expect_equal(full_json$`Certificate ID`, sort(full_json$`Certificate ID`),
-             info = "register-full.json sorted by Certificate ID")
-# Should have extended columns beyond the regular register
-expected_cols <- c("Certificate ID", "Repository", "Repository Link", "Type", "Venue",
-                   "Check date", "Report", "Title", "Paper reference",
-                   "Paper authors", "Paper author ORCIDs",
-                   "Codecheckers", "Codechecker ORCIDs", "Summary", "Source")
-expect_true(all(expected_cols %in% names(full_json)),
-            info = "register-full.json has all expected columns")
+cert_ids <- sapply(full_json, "[[", "Certificate ID")
+expect_equal(cert_ids, sort(cert_ids), info = "register-full.json sorted by Certificate ID")
+# Should have expected fields
+expected_fields <- c("Certificate ID", "Repository", "Repository Link", "Type", "Venue",
+                     "Check date", "Report", "Title", "Paper reference",
+                     "Paper authors", "Codecheckers", "Summary", "Source")
+expect_true(all(expected_fields %in% names(full_json[[1]])),
+            info = "register-full.json has all expected fields")
+# Paper authors should be an array of objects with name (and optionally orcid)
+first_with_authors <- Filter(function(e) length(e$`Paper authors`) > 0, full_json)
+if (length(first_with_authors) > 0) {
+  author <- first_with_authors[[1]]$`Paper authors`[[1]]
+  expect_true("name" %in% names(author), info = "Paper authors have name field")
+}
+# Codecheckers should be an array of objects with name (and optionally orcid)
+first_with_cc <- Filter(function(e) length(e$Codecheckers) > 0, full_json)
+if (length(first_with_cc) > 0) {
+  checker <- first_with_cc[[1]]$Codecheckers[[1]]
+  expect_true("name" %in% names(checker), info = "Codecheckers have name field")
+}
 
+# CSV should have flat columns
 full_csv <- read.csv("docs/register-full.csv", as.is = TRUE)
 expect_equal(nrow(full_csv), nrow(test_register), info = "register-full.csv has all entries")
+csv_expected <- c("Certificate.ID", "Paper.authors", "Paper.author.ORCIDs",
+                  "Codecheckers", "Codechecker.ORCIDs")
+expect_true(all(csv_expected %in% names(full_csv)),
+            info = "register-full.csv has flat author/codechecker columns")
 
 # clean up
 expect_equal(unlink("docs", recursive = TRUE), 0)
