@@ -138,6 +138,8 @@ under the MIT license, see file `LICENSE`.
 - [`add_markdown_title()`](http://codecheck.org.uk/codecheck/reference/add_markdown_title.md)
   : Function to add the markdown title based on the specific register
   table name.
+- [`add_openalex_ids()`](http://codecheck.org.uk/codecheck/reference/add_openalex_ids.md)
+  : Add OpenAlex work IDs to the register table (addresses register#185)
 - [`add_paper_details_md()`](http://codecheck.org.uk/codecheck/reference/add_paper_details_md.md)
   : Populates an existing markdown content template with details about
   the codechecked paper.
@@ -355,6 +357,8 @@ under the MIT license, see file `LICENSE`.
   : Get GitHub handle for a codechecker by name
 - [`get_lifecycle_metadata()`](http://codecheck.org.uk/codecheck/reference/get_lifecycle_metadata.md)
   : Retrieve metadata from Lifecycle Journal
+- [`get_openalex_id()`](http://codecheck.org.uk/codecheck/reference/get_openalex_id.md)
+  : Look up the OpenAlex work ID for a paper reference URL
 - [`get_or_create_zenodo_record()`](http://codecheck.org.uk/codecheck/reference/get_or_create_zenodo_record.md)
   : Create or retrieve Zenodo record, submit to CODECHECK community, and
   update codecheck.yml
@@ -417,6 +421,8 @@ under the MIT license, see file `LICENSE`.
   : Render Non-Register Markdown Table
 - [`render_register()`](http://codecheck.org.uk/codecheck/reference/render_register.md)
   : Render Register in Specified Output Format
+- [`render_register_full()`](http://codecheck.org.uk/codecheck/reference/render_register_full.md)
+  : Build a full metadata register from the preprocessed register table
 - [`render_register_json()`](http://codecheck.org.uk/codecheck/reference/render_register_json.md)
   : Renders register json for a single register_table
 - [`render_register_md()`](http://codecheck.org.uk/codecheck/reference/render_register_md.md)
