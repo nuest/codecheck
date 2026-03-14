@@ -80,6 +80,164 @@ add_cert_pdf_links <- function(register_table) {
   return(register_table)
 }
 
+#' Build a full metadata register from the preprocessed register table
+#'
+#' Enriches the register with all available fields from each codecheck.yml,
+#' including paper authors, codechecker details, summary, and source.
+#' Writes register-full.json and register-full.csv (addresses register#57).
+#'
+#' @param register_table The full preprocessed register table
+#' @param output_dir The output directory (e.g., "docs/")
+render_register_full <- function(register_table, output_dir) {
+  cli::cli_alert_info("Generating full register export (register-full.json, register-full.csv)")
+
+  n <- nrow(register_table)
+
+  # JSON entries as list-of-lists (supports nested authors/codecheckers arrays)
+  json_entries <- vector("list", n)
+  # CSV columns as flat vectors (semicolon-separated for multi-value fields)
+  csv_report <- rep(NA_character_, n)
+  csv_title <- rep(NA_character_, n)
+  csv_paper_ref <- rep(NA_character_, n)
+  csv_paper_authors <- rep(NA_character_, n)
+  csv_paper_author_orcids <- rep(NA_character_, n)
+  csv_codecheckers <- rep(NA_character_, n)
+  csv_codechecker_orcids <- rep(NA_character_, n)
+  csv_summary <- rep(NA_character_, n)
+  csv_source <- rep(NA_character_, n)
+  csv_repo_links <- rep(NA_character_, n)
+
+  for (i in seq_len(n)) {
+    repo_spec <- register_table[i, "Repository"]
+
+    # Repository link
+    spec <- parse_repository_spec(repo_spec)
+    hyperlink_key <- spec[["type"]]
+    repo_link <- if (hyperlink_key %in% names(CONFIG$HYPERLINKS)) {
+      paste0(CONFIG$HYPERLINKS[[hyperlink_key]], spec[["repo"]])
+    } else {
+      repo_spec
+    }
+    csv_repo_links[i] <- repo_link
+
+    entry <- list(
+      `Certificate ID` = register_table[i, "Certificate ID"],
+      Repository = repo_spec,
+      `Repository Link` = repo_link,
+      Type = register_table[i, "Type"],
+      Venue = register_table[i, "Venue"],
+      `Check date` = if ("Check date" %in% names(register_table)) register_table[i, "Check date"] else NA_character_,
+      OpenAlex = if ("OpenAlex" %in% names(register_table)) register_table[i, "OpenAlex"] else NA_character_
+    )
+
+    # Fetch full codecheck.yml metadata (cached from preprocessing)
+    config_yml <- get_codecheck_yml(repo_spec)
+
+    if (!is.null(config_yml)) {
+      entry$Report <- config_yml$report %||% NA_character_
+      csv_report[i] <- entry$Report
+      entry$Title <- if (!is.null(config_yml$paper$title)) stringr::str_trim(config_yml$paper$title) else NA_character_
+      csv_title[i] <- entry$Title
+      entry$`Paper reference` <- if (!is.null(config_yml$paper$reference)) stringr::str_trim(config_yml$paper$reference) else NA_character_
+      csv_paper_ref[i] <- entry$`Paper reference`
+
+      # Paper authors as structured array for JSON
+      if (!is.null(config_yml$paper$authors)) {
+        entry$`Paper authors` <- lapply(config_yml$paper$authors, function(a) {
+          obj <- list(name = a$name %||% NA_character_)
+          if (!is.null(a$ORCID) && a$ORCID != "") obj$orcid <- a$ORCID
+          obj
+        })
+        a_names <- vapply(config_yml$paper$authors, function(a) a$name %||% NA_character_, character(1))
+        a_orcids <- vapply(config_yml$paper$authors, function(a) if (!is.null(a$ORCID) && a$ORCID != "") a$ORCID else NA_character_, character(1))
+        csv_paper_authors[i] <- paste(a_names[!is.na(a_names)], collapse = "; ")
+        orcids_valid <- a_orcids[!is.na(a_orcids)]
+        csv_paper_author_orcids[i] <- if (length(orcids_valid) > 0) paste(orcids_valid, collapse = "; ") else NA_character_
+      } else {
+        entry$`Paper authors` <- list()
+      }
+
+      # Codecheckers as structured array for JSON
+      if (!is.null(config_yml$codechecker)) {
+        entry$Codecheckers <- lapply(config_yml$codechecker, function(cc) {
+          obj <- list(name = cc$name %||% NA_character_)
+          if (!is.null(cc$ORCID) && cc$ORCID != "") obj$orcid <- cc$ORCID
+          obj
+        })
+        cc_names <- vapply(config_yml$codechecker, function(cc) cc$name %||% NA_character_, character(1))
+        cc_orcids <- vapply(config_yml$codechecker, function(cc) if (!is.null(cc$ORCID) && cc$ORCID != "") cc$ORCID else NA_character_, character(1))
+        csv_codecheckers[i] <- paste(cc_names[!is.na(cc_names)], collapse = "; ")
+        cc_valid <- cc_orcids[!is.na(cc_orcids)]
+        csv_codechecker_orcids[i] <- if (length(cc_valid) > 0) paste(cc_valid, collapse = "; ") else NA_character_
+      } else {
+        entry$Codecheckers <- list()
+      }
+
+      entry$Summary <- config_yml$summary %||% NA_character_
+      csv_summary[i] <- entry$Summary
+      entry$Source <- config_yml$source %||% NA_character_
+      csv_source[i] <- entry$Source
+    } else {
+      entry$Report <- NA_character_
+      entry$Title <- NA_character_
+      entry$`Paper reference` <- NA_character_
+      entry$`Paper authors` <- list()
+      entry$Codecheckers <- list()
+      entry$Summary <- NA_character_
+      entry$Source <- NA_character_
+    }
+
+    json_entries[[i]] <- entry
+  }
+
+  # Sort by Certificate ID for consistent diffs (as requested in issue)
+  cert_ids <- vapply(json_entries, function(e) e$`Certificate ID`, character(1))
+  sort_order <- order(cert_ids)
+  json_entries <- json_entries[sort_order]
+
+  # Write JSON (list-of-lists preserves nested author/codechecker arrays)
+  jsonlite::write_json(
+    json_entries,
+    path = file.path(output_dir, "register-full.json"),
+    pretty = TRUE,
+    auto_unbox = TRUE,
+    na = "null"
+  )
+
+  # Write CSV (flat columns with semicolon-separated multi-value fields)
+  csv_df <- data.frame(
+    `Certificate ID` = register_table$`Certificate ID`,
+    Repository = register_table$Repository,
+    `Repository Link` = csv_repo_links,
+    Type = register_table$Type,
+    Venue = register_table$Venue,
+    `Check date` = if ("Check date" %in% names(register_table)) register_table$`Check date` else NA_character_,
+    Report = csv_report,
+    Title = csv_title,
+    `Paper reference` = csv_paper_ref,
+    OpenAlex = if ("OpenAlex" %in% names(register_table)) register_table$OpenAlex else NA_character_,
+    `Paper authors` = csv_paper_authors,
+    `Paper author ORCIDs` = csv_paper_author_orcids,
+    Codecheckers = csv_codecheckers,
+    `Codechecker ORCIDs` = csv_codechecker_orcids,
+    Summary = csv_summary,
+    Source = csv_source,
+    stringsAsFactors = FALSE,
+    check.names = FALSE
+  )
+  csv_df <- csv_df[sort_order, ]
+  rownames(csv_df) <- NULL
+
+  utils::write.csv(
+    csv_df,
+    file = file.path(output_dir, "register-full.csv"),
+    row.names = FALSE,
+    na = ""
+  )
+
+  cli::cli_alert_success("Written register-full.json and register-full.csv ({n} entries)")
+}
+
 #' Detect the publication platform from a report URL
 #'
 #' Extracts a human-readable platform name from the report URL's domain.

@@ -66,5 +66,25 @@ expect_equal(length(register), length(featured))
 expect_equal(names(register[[1]]), CONFIG$JSON_COLUMNS)
 expect_equal(sapply(register, "[[", "Certificate ID"), test_register$Certificate)
 
+# register-full (addresses register#57) ----
+expect_true(file.exists("docs/register-full.json"), info = "register-full.json exists")
+expect_true(file.exists("docs/register-full.csv"), info = "register-full.csv exists")
+
+full_json <- jsonlite::fromJSON("docs/register-full.json")
+expect_equal(nrow(full_json), nrow(test_register), info = "register-full.json has all entries")
+# Should be sorted by Certificate ID
+expect_equal(full_json$`Certificate ID`, sort(full_json$`Certificate ID`),
+             info = "register-full.json sorted by Certificate ID")
+# Should have extended columns beyond the regular register
+expected_cols <- c("Certificate ID", "Repository", "Repository Link", "Type", "Venue",
+                   "Check date", "Report", "Title", "Paper reference",
+                   "Paper authors", "Paper author ORCIDs",
+                   "Codecheckers", "Codechecker ORCIDs", "Summary", "Source")
+expect_true(all(expected_cols %in% names(full_json)),
+            info = "register-full.json has all expected columns")
+
+full_csv <- read.csv("docs/register-full.csv", as.is = TRUE)
+expect_equal(nrow(full_csv), nrow(test_register), info = "register-full.csv has all entries")
+
 # clean up
 expect_equal(unlink("docs", recursive = TRUE), 0)

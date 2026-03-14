@@ -2,6 +2,7 @@
 
 ## New Features
 
+* **Full metadata register export**: New `register-full.json` and `register-full.csv` files are now generated during rendering, containing all fields from each certificate's `codecheck.yml` — paper authors with ORCIDs, codecheckers with ORCIDs, summary, source, report link, and paper reference. The JSON format preserves nested arrays for authors and codecheckers, while the CSV uses semicolon-separated values for multi-value fields. Both files are sorted by certificate ID for consistent diffs (codecheckers/register#57)
 * **Redirect page for /certs/ directory**: Visiting `/register/certs/` without a certificate ID now redirects to the main register page instead of showing a 404 error (codecheckers/register#166)
 * **Rich logging with cli**: Register rendering now uses the `cli` package for structured, colored output with progress bars, section headers, and semantic alerts (success/info/warning/danger). Pandoc verbose output from `rmarkdown::render()` is suppressed by default; pass `verbose = TRUE` to `register_render()` to enable detailed debugging output
 * **Warnings captured and shown as log entries**: All R warnings emitted during `register_render()` are now captured and displayed as structured `cli` warning entries at the end of rendering, deduplicated with occurrence counts. This replaces R's default "There were N warnings (use warnings() to see them)" prompt which was impossible to act on after the R session ended

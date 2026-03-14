@@ -205,6 +205,12 @@ create_original_register_files <- function(register_table, outputs){
     table_details[["output_dir"]] <- generate_output_dir(filter, table_details)
     render_register(register_table, table_details, filter, output_type, full_register_table = register_table)
   }
+
+  # Generate full metadata export (addresses register#57)
+  if ("json" %in% outputs) {
+    output_dir <- generate_output_dir(NA, list(is_reg_table = TRUE))
+    render_register_full(register_table, output_dir)
+  }
 }
 
 #' Create Register Files
