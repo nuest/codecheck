@@ -250,6 +250,14 @@ render_html <- function(table, table_details, filter){
   create_index_section_files(output_dir, filter, table_details, schema_org_jsonld = schema_org_jsonld)
   generate_html_document_yml(output_dir)
 
+  # Schedule cleanup of temporary files so they are removed even if render() fails
+  temp_files <- file.path(output_dir, c("temp.md", "index_header.html", "index_prefix.html", "index_postfix.html", "html_document.yml"))
+  on.exit({
+    for (f in temp_files) {
+      if (file.exists(f)) file.remove(f)
+    }
+  }, add = TRUE)
+
   yaml_path <- normalizePath(file.path(getwd(), output_dir, "html_document.yml"))
 
   # Render HTML from markdown
@@ -261,13 +269,6 @@ render_html <- function(table, table_details, filter){
     output_yaml = yaml_path,
     quiet = !isTRUE(CONFIG$VERBOSE)
   )
-
-  # Remove temporary files (content already embedded in index.html)
-  file.remove(temp_md_file_path)
-  file.remove(file.path(output_dir, "index_header.html"))
-  file.remove(file.path(output_dir, "index_prefix.html"))
-  file.remove(file.path(output_dir, "index_postfix.html"))
-  file.remove(file.path(output_dir, "html_document.yml"))
 
   # For all registered tables besides the original we change the html
   # file so that the path to the libs folder refers to the libs folder "docs/libs".

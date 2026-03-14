@@ -130,6 +130,127 @@ register_render <- function(register = read.csv("register.csv", as.is = TRUE, co
   invisible(register_table)
 }
 
+#' Render a single certificate page by its ID
+#'
+#' Re-renders the HTML page and JSON metadata for one specific certificate
+#' without modifying any index or list pages. Useful for updating a single
+#' certificate after its PDF or metadata has changed, without a full
+#' register re-render.
+#'
+#' @param cert_id Character string with the certificate identifier (e.g., "2024-017").
+#' @param register A \code{data.frame} of the register, or a path to the register CSV file.
+#'   Defaults to reading \code{"register.csv"} from the working directory.
+#' @param config A character vector of configuration file paths to source.
+#'   Defaults to the package's built-in \code{config.R}.
+#' @param venues_file Path to the venues.csv file containing venue names and labels.
+#' @param force_download Logical; if TRUE, forces re-download of certificate PDF
+#'   even if it already exists locally. Defaults to TRUE.
+#' @param download_and_convert Logical; if TRUE, downloads and converts the
+#'   certificate PDF to PNG images. Defaults to TRUE.
+#' @param verbose Logical; if TRUE, shows detailed output including pandoc
+#'   commands from rmarkdown::render(). Defaults to FALSE.
+#'
+#' @return The certificate ID (invisibly).
+#'
+#' @examples
+#' \dontrun{
+#'   register_render_cert("2024-017")
+#'   register_render_cert("2024-017", force_download = FALSE)
+#' }
+#'
+#' @author Daniel Nuest
+#' @export
+register_render_cert <- function(cert_id,
+                                 register = read.csv("register.csv", as.is = TRUE, comment.char = '#'),
+                                 config = c(system.file("extdata", "config.R", package = "codecheck")),
+                                 venues_file = "venues.csv",
+                                 force_download = TRUE,
+                                 download_and_convert = TRUE,
+                                 verbose = FALSE) {
+  cli::cli_h1("CODECHECK Render Certificate {cert_id}")
+
+  # Load register from file path if a string was provided
+  if (is.character(register) && length(register) == 1 && !is.data.frame(register)) {
+    if (!file.exists(register)) {
+      stop("Register file not found: ", register)
+    }
+    register <- read.csv(register, as.is = TRUE, comment.char = '#')
+  }
+
+  # Look up cert_id in the register
+  cert_row <- register[register$Certificate == cert_id, ]
+  if (nrow(cert_row) == 0) {
+    stop("Certificate '", cert_id, "' not found in register")
+  }
+  if (nrow(cert_row) > 1) {
+    warning("Multiple entries for '", cert_id, "' in register; using the first")
+    cert_row <- cert_row[1, ]
+  }
+
+  repo_link <- cert_row$Repository
+  cert_type <- cert_row$Type
+  cert_venue <- cert_row$Venue
+
+  # Load configuration
+  for (i in seq_along(config)) {
+    source(config[i])
+  }
+  CONFIG$VERBOSE <- verbose
+
+  # Load venues configuration
+  load_venues_config(venues_file)
+
+  # Setup shared libraries (needed for HTML rendering)
+  setup_external_libraries()
+  copy_package_javascript()
+
+  cli::cli_alert_info("Repository: {repo_link}")
+  cli::cli_alert_info("Type: {cert_type} | Venue: {cert_venue}")
+
+  start_time <- Sys.time()
+
+  # Download and convert certificate PDF
+  download_cert_status <- 0
+  if (download_and_convert) {
+    config_yml <- get_codecheck_yml(repo_link)
+    report_link <- config_yml$report
+
+    pdf_path <- file.path(CONFIG$CERTS_DIR[["cert"]], cert_id, "cert.pdf")
+    pdf_exists <- file.exists(pdf_path)
+
+    if (!pdf_exists || force_download) {
+      download_cert_status <- tryCatch(
+        download_cert_pdf(report_link, cert_id),
+        error = function(e) {
+          cli::cli_alert_warning("{cert_id} | Error downloading PDF: {e$message}")
+          0
+        }
+      )
+
+      if (download_cert_status == 1) {
+        tryCatch(
+          convert_cert_pdf_to_png(cert_id),
+          error = function(e) {
+            cli::cli_alert_warning("{cert_id} | Error converting PDF: {e$message}")
+          }
+        )
+      }
+    } else {
+      download_cert_status <- 1
+      cli::cli_alert_info("PDF already exists, skipping download (use force_download = TRUE to re-download)")
+    }
+  }
+
+  # Render HTML page and JSON metadata
+  render_cert_html(cert_id, repo_link, download_cert_status, cert_type, cert_venue)
+
+  elapsed <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
+  cli::cli_alert_success("Certificate {cert_id} rendered in {sprintf('%.1f', elapsed)}s")
+  cli::cli_alert_info("Output: {.path {file.path(CONFIG$CERTS_DIR[['cert']], cert_id, 'index.html')}}")
+
+  invisible(cert_id)
+}
+
 #' Regenerate all stats.json files from existing register.json files
 #'
 #' Fast alternative to a full re-render when only the stats computation has
