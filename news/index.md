@@ -1,5 +1,70 @@
 # Changelog
 
+## codecheck 0.25.0.9002
+
+### Bug Fixes
+
+- **Codecheckers are recorded as persons on Zenodo**:
+  [`upload_zenodo_metadata()`](http://codecheck.org.uk/codecheck/reference/upload_zenodo_metadata.md)
+  passed only a full `name` to `zen4R::addCreator()`, which makes Zenodo
+  store the codechecker as an *organisation* rather than a person. The
+  name is now split into given and family name via the new
+  [`split_person_name()`](http://codecheck.org.uk/codecheck/reference/split_person_name.md)
+  helper, and any affiliation from `codecheck.yml` is passed along.
+  Names that cannot be split (a single token, e.g. a group name) still
+  deposit as before, but now emit a warning
+- **Alternate identifiers are no longer silently dropped**:
+  [`upload_zenodo_metadata()`](http://codecheck.org.uk/codecheck/reference/upload_zenodo_metadata.md)
+  wrote the certificate identifiers to `metadata$alternate_identifiers`,
+  a legacy field name that the InvenioRDM record model Zenodo uses today
+  discards on deposit. The identifiers now go to `metadata$identifiers`,
+  so the `cdchck.science/register/certs/<CERT ID>` identifiers required
+  by the [community curation
+  policy](https://zenodo.org/communities/codecheck/curation-policy)
+  actually reach the record
+- **Record titles match the curation policy**: deposits are titled
+  “CODECHECK Certificate ” instead of “CODECHECK certificate ”
+- **Missing paper DOI is loud**: a `paper$reference` that is not a DOI,
+  or missing entirely, now raises a warning instead of an easily-missed
+  message, because it means the required “reviews” relation to the
+  checked paper cannot be created
+
+### New Features
+
+- **Curation policy check during rendering**:
+  [`register_render()`](http://codecheck.org.uk/codecheck/reference/register_render.md)
+  and
+  [`register_check()`](http://codecheck.org.uk/codecheck/reference/register_check.md)
+  now audit every Zenodo-hosted certificate against the CODECHECK
+  community curation policy and report the findings as a `cli` section
+  with per-status icons (✖ required item missing, ! recommendation
+  unmet, ℹ record unreachable), followed by a tally. Non-compliance
+  never fails a render, and neither does an outage or an unexpected
+  error in the check itself. Record metadata is cached via
+  `cached_lookup()`, so only a cold render pays for the extra requests;
+  pass `check_zenodo_policy = FALSE` (or `make render CHECK_ZENODO=0` in
+  the register project) to skip them. New functions
+  [`check_register_zenodo_policy()`](http://codecheck.org.uk/codecheck/reference/check_register_zenodo_policy.md),
+  [`report_zenodo_policy_findings()`](http://codecheck.org.uk/codecheck/reference/report_zenodo_policy_findings.md)
+  and
+  [`clear_zenodo_policy_cache()`](http://codecheck.org.uk/codecheck/reference/clear_zenodo_policy_cache.md),
+  the latter also called by
+  [`curate_zenodo_record()`](http://codecheck.org.uk/codecheck/reference/curate_zenodo_record.md)
+  so a freshly curated record is not reported from its pre-curation
+  cache entry
+- **Curation policy audit for published records**: new
+  [`zenodo_policy_check()`](http://codecheck.org.uk/codecheck/reference/zenodo_policy_check.md)
+  evaluates record metadata against the CODECHECK community curation
+  policy and returns a data frame of pass/warn/fail per requirement.
+  [`check_zenodo_record()`](http://codecheck.org.uk/codecheck/reference/check_zenodo_record.md)
+  fetches a published record and prints the audit,
+  [`curate_zenodo_record()`](http://codecheck.org.uk/codecheck/reference/curate_zenodo_record.md)
+  proposes and (with `dry_run = FALSE`) applies the corrections, and
+  [`resolve_zenodo_record_id()`](http://codecheck.org.uk/codecheck/reference/resolve_zenodo_record_id.md)
+  resolves a certificate ID via `register.csv` and the repository’s
+  `codecheck.yml` to a Zenodo record. The register project wraps these
+  as `make zenodo_check CERT_ID=…` and `make zenodo_curate CERT_ID=…`
+
 ## codecheck 0.25.0
 
 ### New Features

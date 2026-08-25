@@ -13,6 +13,13 @@ computational research. Two main subsystems:
     [CODECHECK Register](https://codecheck.org.uk/register/) website
     from `register.csv`
 
+## Committing
+
+**Never commit. Stage changes with `git add` and propose a commit
+message; the user commits.** This holds even in auto-accept mode and
+even when the change is trivial or the message was agreed beforehand.
+The same applies to pushing and to anything that publishes.
+
 ## Testing
 
 **CRITICAL: ALWAYS use `tinytest::build_install_test(".")` for

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">codecheck</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.25.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.25.0.9002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +37,28 @@
       <small>Source: <a href="https://github.com/codecheckers/codecheck/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.25.0.9002" id="codecheck-02509002">codecheck 0.25.0.9002<a class="anchor" aria-label="anchor" href="#codecheck-02509002"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-0-25-0-9002">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-25-0-9002"></a></h3>
+<ul><li>
+<strong>Codecheckers are recorded as persons on Zenodo</strong>: <code><a href="../reference/upload_zenodo_metadata.html">upload_zenodo_metadata()</a></code> passed only a full <code>name</code> to <code>zen4R::addCreator()</code>, which makes Zenodo store the codechecker as an <em>organisation</em> rather than a person. The name is now split into given and family name via the new <code><a href="../reference/split_person_name.html">split_person_name()</a></code> helper, and any affiliation from <code>codecheck.yml</code> is passed along. Names that cannot be split (a single token, e.g. a group name) still deposit as before, but now emit a warning</li>
+<li>
+<strong>Alternate identifiers are no longer silently dropped</strong>: <code><a href="../reference/upload_zenodo_metadata.html">upload_zenodo_metadata()</a></code> wrote the certificate identifiers to <code>metadata$alternate_identifiers</code>, a legacy field name that the InvenioRDM record model Zenodo uses today discards on deposit. The identifiers now go to <code>metadata$identifiers</code>, so the <code>cdchck.science/register/certs/&lt;CERT ID&gt;</code> identifiers required by the <a href="https://zenodo.org/communities/codecheck/curation-policy" class="external-link">community curation policy</a> actually reach the record</li>
+<li>
+<strong>Record titles match the curation policy</strong>: deposits are titled “CODECHECK Certificate <id>” instead of “CODECHECK certificate <id>”</id></id></li>
+<li>
+<strong>Missing paper DOI is loud</strong>: a <code>paper$reference</code> that is not a DOI, or missing entirely, now raises a warning instead of an easily-missed message, because it means the required “reviews” relation to the checked paper cannot be created</li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-0-25-0-9002">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-25-0-9002"></a></h3>
+<ul><li>
+<strong>Curation policy check during rendering</strong>: <code><a href="../reference/register_render.html">register_render()</a></code> and <code><a href="../reference/register_check.html">register_check()</a></code> now audit every Zenodo-hosted certificate against the CODECHECK community curation policy and report the findings as a <code>cli</code> section with per-status icons (✖ required item missing, ! recommendation unmet, ℹ record unreachable), followed by a tally. Non-compliance never fails a render, and neither does an outage or an unexpected error in the check itself. Record metadata is cached via <code>cached_lookup()</code>, so only a cold render pays for the extra requests; pass <code>check_zenodo_policy = FALSE</code> (or <code>make render CHECK_ZENODO=0</code> in the register project) to skip them. New functions <code><a href="../reference/check_register_zenodo_policy.html">check_register_zenodo_policy()</a></code>, <code><a href="../reference/report_zenodo_policy_findings.html">report_zenodo_policy_findings()</a></code> and <code><a href="../reference/clear_zenodo_policy_cache.html">clear_zenodo_policy_cache()</a></code>, the latter also called by <code><a href="../reference/curate_zenodo_record.html">curate_zenodo_record()</a></code> so a freshly curated record is not reported from its pre-curation cache entry</li>
+<li>
+<strong>Curation policy audit for published records</strong>: new <code><a href="../reference/zenodo_policy_check.html">zenodo_policy_check()</a></code> evaluates record metadata against the CODECHECK community curation policy and returns a data frame of pass/warn/fail per requirement. <code><a href="../reference/check_zenodo_record.html">check_zenodo_record()</a></code> fetches a published record and prints the audit, <code><a href="../reference/curate_zenodo_record.html">curate_zenodo_record()</a></code> proposes and (with <code>dry_run = FALSE</code>) applies the corrections, and <code><a href="../reference/resolve_zenodo_record_id.html">resolve_zenodo_record_id()</a></code> resolves a certificate ID via <code>register.csv</code> and the repository’s <code>codecheck.yml</code> to a Zenodo record. The register project wraps these as <code>make zenodo_check CERT_ID=…</code> and <code>make zenodo_curate CERT_ID=…</code>
+</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.25.0" id="codecheck-0250">codecheck 0.25.0<a class="anchor" aria-label="anchor" href="#codecheck-0250"></a></h2>
 <div class="section level3">

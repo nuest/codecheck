@@ -78,8 +78,15 @@
 - [`check_issue_status()`](http://codecheck.org.uk/codecheck/reference/check_issue_status.md)
   : Function issue status. If the issue is not closed a warning is
   thrown stating that the issue is still open.
+- [`check_register_zenodo_policy()`](http://codecheck.org.uk/codecheck/reference/check_register_zenodo_policy.md)
+  : Check a register's Zenodo records against the CODECHECK curation
+  policy
+- [`check_zenodo_record()`](http://codecheck.org.uk/codecheck/reference/check_zenodo_record.md)
+  : Audit a Zenodo record against the CODECHECK curation policy
 - [`cite_certificate()`](http://codecheck.org.uk/codecheck/reference/cite_certificate.md)
   : Print a citation for the codecheck certificate.
+- [`clear_zenodo_policy_cache()`](http://codecheck.org.uk/codecheck/reference/clear_zenodo_policy_cache.md)
+  : Drop the cached policy metadata of one Zenodo record
 - [`codecheck_GET()`](http://codecheck.org.uk/codecheck/reference/codecheck_GET.md)
   : Custom HTTP GET with proper User-Agent header
 - [`codecheck_metadata()`](http://codecheck.org.uk/codecheck/reference/codecheck_metadata.md)
@@ -140,6 +147,8 @@
   : Create Venue Type-Specific Tables
 - [`create_venues_tables()`](http://codecheck.org.uk/codecheck/reference/create_venues_tables.md)
   : Create Venues Tables
+- [`curate_zenodo_record()`](http://codecheck.org.uk/codecheck/reference/curate_zenodo_record.md)
+  : Curate a published Zenodo record per the CODECHECK curation policy
 - [`detect_report_platform()`](http://codecheck.org.uk/codecheck/reference/detect_report_platform.md)
   : Detect the publication platform from a report URL
 - [`download_cert_pdf()`](http://codecheck.org.uk/codecheck/reference/download_cert_pdf.md)
@@ -271,6 +280,8 @@
 - [`get_zenodo_record()`](http://codecheck.org.uk/codecheck/reference/get_zenodo_record.md)
   : Get the full zenodo record using the record number stored in the
   metadata.
+- [`get_zenodo_record_metadata()`](http://codecheck.org.uk/codecheck/reference/get_zenodo_record_metadata.md)
+  : Fetch metadata of a published Zenodo record
 - [`is_placeholder_certificate()`](http://codecheck.org.uk/codecheck/reference/is_placeholder_certificate.md)
   : Check if certificate identifier or DOI is a placeholder
 - [`latex_codecheck_logo()`](http://codecheck.org.uk/codecheck/reference/latex_codecheck_logo.md)
@@ -319,6 +330,10 @@
   : Renders register json for a single register_table
 - [`render_register_md()`](http://codecheck.org.uk/codecheck/reference/render_register_md.md)
   : Renders register md for a single register_table
+- [`report_zenodo_policy_findings()`](http://codecheck.org.uk/codecheck/reference/report_zenodo_policy_findings.md)
+  : Report curation policy findings
+- [`resolve_zenodo_record_id()`](http://codecheck.org.uk/codecheck/reference/resolve_zenodo_record_id.md)
+  : Resolve a certificate ID or Zenodo reference to a Zenodo record ID
 - [`set_paper_title_references()`](http://codecheck.org.uk/codecheck/reference/set_paper_title_references.md)
   : Set "Title" and "Paper reference" columns and values to the
   register_table
@@ -326,6 +341,8 @@
   : Set "Title" and "Paper reference" columns for CSV files
 - [`setup_external_libraries()`](http://codecheck.org.uk/codecheck/reference/setup_external_libraries.md)
   : Download and Setup External Libraries Locally
+- [`split_person_name()`](http://codecheck.org.uk/codecheck/reference/split_person_name.md)
+  : Split a person name into given and family name
 - [`update_certificate_from_github()`](http://codecheck.org.uk/codecheck/reference/update_certificate_from_github.md)
   : Update certificate ID from GitHub issue
 - [`update_codecheck_yml_from_lifecycle()`](http://codecheck.org.uk/codecheck/reference/update_codecheck_yml_from_lifecycle.md)
@@ -351,3 +368,5 @@
   : Validate YAML syntax of a codecheck.yml file
 - [`write_meta_json()`](http://codecheck.org.uk/codecheck/reference/write_meta_json.md)
   : Write Build Metadata to JSON File
+- [`zenodo_policy_check()`](http://codecheck.org.uk/codecheck/reference/zenodo_policy_check.md)
+  : Check Zenodo record metadata against the CODECHECK curation policy
