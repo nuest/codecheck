@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">codecheck</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.25.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.25.0.9007</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,10 @@
 <span>  metadata <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  register_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  dry_run <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  record_metadata <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  record_metadata <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"title"</span>, <span class="st">"publisher"</span>, <span class="st">"language"</span>, <span class="st">"resource_type"</span>, <span class="st">"identifiers"</span>, <span class="st">"reviews"</span>,</span>
+<span>    <span class="st">"repository"</span>, <span class="st">"creators"</span><span class="op">)</span>,</span>
+<span>  creator_overrides <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -85,6 +88,25 @@ directory</p></dd>
 <dd><p>the current record metadata as returned by
 [get_zenodo_record_metadata()]; fetched from Zenodo when NULL (the default).
 Mainly useful for testing and for auditing a record offline.</p></dd>
+
+
+<dt id="arg-fields">fields<a class="anchor" aria-label="anchor" href="#arg-fields"></a></dt>
+<dd><p>which classes of correction to consider. Defaults to all of
+"title", "publisher", "language", "resource_type", "identifiers", "reviews",
+"repository" and "creators". The first seven are mechanical: their target
+value follows from the certificate ID or from `codecheck.yml`. "creators"
+is not: splitting a name into given and family name is wrong for group
+entries such as "Delft 2024-05 participants", so exclude it from batch runs
+and review those records individually.</p></dd>
+
+
+<dt id="arg-creator-overrides">creator_overrides<a class="anchor" aria-label="anchor" href="#arg-creator-overrides"></a></dt>
+<dd><p>named list keyed by the creator name as currently
+recorded, controlling how that creator is handled. Use
+`list(organizational = TRUE)` to keep an entry as an organisation (correct
+for a group such as "Delft 2024-05 participants"), or
+`list(given = "Gabriella", family = "Low Chew Tung")` to give an explicit
+split where the last-token heuristic of [split_person_name()] is wrong.</p></dd>
 
 </dl></div>
     <div class="section level2">

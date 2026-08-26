@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">codecheck</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.25.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.25.0.9007</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -216,10 +216,24 @@
 
         <dt>
 
+          <code><a href="cached_lookup.html">cached_lookup()</a></code>
+
+        </dt>
+        <dd>Cache the result of a metadata lookup on disk, but only when conclusive</dd>
+
+        <dt>
+
           <code><a href="calculate_breadcrumb_base_path.html">calculate_breadcrumb_base_path()</a></code>
 
         </dt>
         <dd>Calculate base path for breadcrumb links</dd>
+
+        <dt>
+
+          <code><a href="cert_link_cache.html">cert_link_cache</a></code>
+
+        </dt>
+        <dd>In-session cache of resolved certificate download links, see get_cert_link()</dd>
 
         <dt>
 
@@ -258,6 +272,13 @@
 
         <dt>
 
+          <code><a href="clear_cert_link_cache.html">clear_cert_link_cache()</a></code>
+
+        </dt>
+        <dd>Clear the in-session cache of resolved certificate download links</dd>
+
+        <dt>
+
           <code><a href="clear_zenodo_policy_cache.html">clear_zenodo_policy_cache()</a></code>
 
         </dt>
@@ -269,6 +290,20 @@
 
         </dt>
         <dd>Custom HTTP GET with proper User-Agent header</dd>
+
+        <dt>
+
+          <code><a href="codecheck_GET_openalex.html">codecheck_GET_openalex()</a></code>
+
+        </dt>
+        <dd>GET an OpenAlex API URL with the configured API key and retries</dd>
+
+        <dt>
+
+          <code><a href="codecheck_GET_retry.html">codecheck_GET_retry()</a></code>
+
+        </dt>
+        <dd>Custom HTTP GET that retries transient failures</dd>
 
         <dt>
 
@@ -437,6 +472,13 @@
 
         </dt>
         <dd>Create Venues Tables</dd>
+
+        <dt>
+
+          <code><a href="curate_register_zenodo_records.html">curate_register_zenodo_records()</a></code>
+
+        </dt>
+        <dd>Curate all Zenodo records of a register</dd>
 
         <dt>
 
@@ -650,6 +692,13 @@
 
         <dt>
 
+          <code><a href="get_abstract_result.html">get_abstract_result()</a></code>
+
+        </dt>
+        <dd>Retrieves the abstract and reports whether the answer is conclusive</dd>
+
+        <dt>
+
           <code><a href="get_abstract_text_crossref.html">get_abstract_text_crossref()</a></code>
 
         </dt>
@@ -657,10 +706,24 @@
 
         <dt>
 
+          <code><a href="get_abstract_text_crossref_result.html">get_abstract_text_crossref_result()</a></code>
+
+        </dt>
+        <dd>Retrieves the abstract from CrossRef and reports whether the API answered</dd>
+
+        <dt>
+
           <code><a href="get_abstract_text_openalex.html">get_abstract_text_openalex()</a></code>
 
         </dt>
         <dd>Retrieves the abstract of a research paper using the OpenAlex API.</dd>
+
+        <dt>
+
+          <code><a href="get_abstract_text_openalex_result.html">get_abstract_text_openalex_result()</a></code>
+
+        </dt>
+        <dd>Retrieves the abstract from OpenAlex and reports whether the API answered</dd>
 
         <dt>
 
@@ -675,6 +738,13 @@
 
         </dt>
         <dd>Retrieves the download link for a certificate file from Zenodo, OSF, or ResearchEquals.</dd>
+
+        <dt>
+
+          <code><a href="get_cert_link_uncached.html">get_cert_link_uncached()</a></code>
+
+        </dt>
+        <dd>Resolves the download link for a certificate file without caching, see get_cert_link().</dd>
 
         <dt>
 
@@ -776,6 +846,13 @@
 
         <dt>
 
+          <code><a href="get_openalex_id_result.html">get_openalex_id_result()</a></code>
+
+        </dt>
+        <dd>Look up the OpenAlex work ID and report whether the answer is conclusive</dd>
+
+        <dt>
+
           <code><a href="get_or_create_zenodo_record.html">get_or_create_zenodo_record()</a></code>
 
         </dt>
@@ -867,6 +944,27 @@
 
         <dt>
 
+          <code><a href="normalize_person_lists.html">normalize_person_lists()</a></code>
+
+        </dt>
+        <dd>Normalize person fields of a codecheck.yml to lists of persons</dd>
+
+        <dt>
+
+          <code><a href="openalex_api_key.html">openalex_api_key()</a></code>
+
+        </dt>
+        <dd>The configured OpenAlex API key</dd>
+
+        <dt>
+
+          <code><a href="openalex_url_with_key.html">openalex_url_with_key()</a></code>
+
+        </dt>
+        <dd>Add the OpenAlex API key to a request URL</dd>
+
+        <dt>
+
           <code><a href="parse_repository_spec.html">parse_repository_spec()</a></code>
 
         </dt>
@@ -899,6 +997,13 @@
 
         </dt>
         <dd>Function for rendering the register into different view</dd>
+
+        <dt>
+
+          <code><a href="register_render_cert.html">register_render_cert()</a></code>
+
+        </dt>
+        <dd>Render a single certificate page by its ID</dd>
 
         <dt>
 
