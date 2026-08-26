@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">codecheck</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.25.0.9007</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.25.0.9008</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +37,14 @@
       <small>Source: <a href="https://github.com/codecheckers/codecheck/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.25.0.9008" id="codecheck-02509008">codecheck 0.25.0.9008<a class="anchor" aria-label="anchor" href="#codecheck-02509008"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-0-25-0-9008">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-25-0-9008"></a></h3>
+<ul><li>
+<strong><code><a href="../reference/create_codecheck_files.html">create_codecheck_files()</a></code> reports the right folder</strong>: the confirmation message said “Created CODECHECK certificate files at .” instead of naming the <code>codecheck/</code> subfolder the files were actually copied into, and separately <code>list.files("codecheck")</code> ignored the <code>target</code> argument entirely. Both messages now use <code>cli</code> alerts (matching the rest of the package) and correctly reference <code>&lt;target&gt;/codecheck/</code> (closes <a href="https://github.com/codecheckers/codecheck/issues/87" class="external-link">#87</a>)</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.25.0.9007" id="codecheck-02509007">codecheck 0.25.0.9007<a class="anchor" aria-label="anchor" href="#codecheck-02509007"></a></h2>
 <div class="section level3">
