@@ -133,6 +133,7 @@
 <url><loc>http://codecheck.org.uk/codecheck/reference/get_openalex_id.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/get_openalex_id_result.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/get_or_create_zenodo_record.html</loc></url>
+<url><loc>http://codecheck.org.uk/codecheck/reference/get_orcid_name_public.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/get_osf_cert_link.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/get_researchequals_cert_link.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/get_zenodo_cert_link.html</loc></url>
@@ -153,6 +154,7 @@
 <url><loc>http://codecheck.org.uk/codecheck/reference/openalex_url_with_key.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/parse_repository_spec.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/preprocess_register.html</loc></url>
+<url><loc>http://codecheck.org.uk/codecheck/reference/register_assets_dir.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/register_check.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/register_clear_cache.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/register_render.html</loc></url>
