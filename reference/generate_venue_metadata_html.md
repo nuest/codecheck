@@ -1,11 +1,10 @@
 # Generate the venue metadata HTML block for an individual venue landing page
 
 Renders venue type, contact, website, a link to the venue's own
-statistics.json, description and identifiers for a venue via the
+index.json, description and identifiers for a venue via the
 \`venue_metadata.html\` whisker template. Fields sourced from venues.csv
-are omitted when missing rather than shown empty; the statistics.json
-link is always shown, since that file is always generated alongside this
-page.
+are omitted when missing rather than shown empty; the index.json link is
+always shown, since that file is always generated alongside this page.
 
 ## Usage
 
@@ -26,4 +25,4 @@ generate_venue_metadata_html(venue_row, venue_type = NULL)
 
 ## Value
 
-An HTML string (never \`""\` - the statistics.json link always renders).
+An HTML string (never \`""\` - the index.json link always renders).

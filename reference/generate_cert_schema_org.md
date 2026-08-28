@@ -12,7 +12,8 @@ generate_cert_schema_org(
   cert_id,
   config_yml,
   abstract_data = NULL,
-  openalex_id = NULL
+  openalex_id = NULL,
+  cert_title = NULL
 )
 ```
 
@@ -37,6 +38,14 @@ generate_cert_schema_org(
   \`NULL\` means "not looked up here" and omits the field, matching the
   pre-existing behaviour of this function for callers that don't pass
   one.
+
+- cert_title:
+
+  Title of the certificate's record on the platform it is published on,
+  see
+  [`resolve_cert_title`](http://codecheck.org.uk/codecheck/reference/resolve_cert_title.md);
+  falls back to the constructed "CODECHECK Certificate \<ID\>" when not
+  given
 
 ## Value
 

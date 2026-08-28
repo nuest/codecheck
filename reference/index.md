@@ -292,6 +292,9 @@
 - [`generate_breadcrumb()`](http://codecheck.org.uk/codecheck/reference/generate_breadcrumb.md)
   : Generate breadcrumb navigation HTML
 
+- [`generate_cert_citation_meta()`](http://codecheck.org.uk/codecheck/reference/generate_cert_citation_meta.md)
+  : Generate Highwire citation meta tags for a certificate page
+
 - [`generate_cert_json()`](http://codecheck.org.uk/codecheck/reference/generate_cert_json.md)
   : Generates a JSON file with all certificate metadata
 

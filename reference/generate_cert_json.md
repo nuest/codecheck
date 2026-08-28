@@ -12,7 +12,8 @@ generate_cert_json(
   cert_type,
   cert_venue,
   openalex_id = NULL,
-  abstract_data = NULL
+  abstract_data = NULL,
+  cert_title = NULL
 )
 ```
 
@@ -47,3 +48,9 @@ generate_cert_json(
 
   Optional pre-resolved abstract; when \`NULL\`, looked up here
   directly.
+
+- cert_title:
+
+  Optional pre-resolved title of the certificate's record on its
+  publication platform; when \`NULL\`, looked up here directly, see
+  [`resolve_cert_title`](http://codecheck.org.uk/codecheck/reference/resolve_cert_title.md).

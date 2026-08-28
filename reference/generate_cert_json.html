@@ -53,7 +53,8 @@ certificate landing page for programmatic access.</p>
 <span>  <span class="va">cert_type</span>,</span>
 <span>  <span class="va">cert_venue</span>,</span>
 <span>  openalex_id <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  abstract_data <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  abstract_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cert_title <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -84,6 +85,12 @@ when `NULL`, looked up here directly.</p></dd>
 
 <dt id="arg-abstract-data">abstract_data<a class="anchor" aria-label="anchor" href="#arg-abstract-data"></a></dt>
 <dd><p>Optional pre-resolved abstract; when `NULL`, looked up here directly.</p></dd>
+
+
+<dt id="arg-cert-title">cert_title<a class="anchor" aria-label="anchor" href="#arg-cert-title"></a></dt>
+<dd><p>Optional pre-resolved title of the certificate's record on
+its publication platform; when `NULL`, looked up here directly, see
+<code><a href="resolve_cert_title.html">resolve_cert_title</a></code>.</p></dd>
 
 </dl></div>
 

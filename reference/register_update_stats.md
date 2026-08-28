@@ -3,9 +3,10 @@
 Fast alternative to a full re-render when only the stats computation has
 changed. Reads the already-generated register.json files under \`docs/\`
 and rewrites \`docs/statistics.json\` (the main register's file, read by
-\[render_statistics_page()\]) and every sub-register's \`stats.json\`,
-with up-to-date statistics (including annual and cumulative breakdowns
-for the main file).
+\[render_statistics_page()\]) and every sub-register's \`stats.json\`
+(\`index.json\` for a venue, which also gets its structured venue
+metadata), with up-to-date statistics (including annual and cumulative
+breakdowns for the main file).
 
 ## Usage
 

@@ -5,13 +5,14 @@
 ### New Features
 
 - Venue landing pages show a metadata panel (website, type, contact,
-  description, identifiers, logo, link to the venue’s own
-  `statistics.json`) sourced from new `venues.csv` columns; the venue
-  type moved out of the page title (register#84). The same metadata is
-  included in the venue’s JSON representation (register#183).
-  register.md carries it as YAML frontmatter instead of embedded HTML,
-  since register.md is a plain markdown/API export, not an HTML page.
-  The venue table’s `Report`/`Paper Title` column widths were also fixed
+  description, identifiers, logo, link to the venue’s own `index.json`)
+  sourced from new `venues.csv` columns; the venue type moved out of the
+  page title (register#84). The same metadata is included in the venue’s
+  JSON representation, renamed from `statistics.json` to `index.json`
+  since it carries more than statistics (register#183). register.md
+  carries it as YAML frontmatter instead of embedded HTML, since
+  register.md is a plain markdown/API export, not an HTML page. The
+  venue table’s `Report`/`Paper Title` column widths were also fixed
   (Paper Title was previously the narrowest column despite carrying the
   most content).
 - JSON/Markdown export links below register tables (venue, codechecker,
@@ -65,6 +66,49 @@
   table. New `inst/extdata/js/random-cert.js`;
   [`generate_html_postfix_hrefs_reg()`](http://codecheck.org.uk/codecheck/reference/generate_html_postfix_hrefs_reg.md)
   gates it to the unfiltered register page only.
+- Certificate pages now carry Highwire Press citation metadata, so that
+  Google Scholar can index a certificate and Zotero identifies it as a
+  report rather than an untyped web page (register#52). The `citation_*`
+  tags describe the **certificate**, not the paper that was checked -
+  the paper has its own landing page at its DOI, and describing it here
+  would make Scholar treat the certificate page as a duplicate of the
+  paper and Zotero save the wrong item; the link to the checked paper
+  stays in the Schema.org `itemReviewed`. Only the Highwire scheme is
+  emitted, not Dublin Core, which Google Scholar documents as a last
+  resort. `citation_technical_report_institution` is what makes Zotero
+  read the page as a `report`, and `citation_pdf_url` is only offered
+  when `cert.pdf` really sits next to the page. New
+  [`generate_cert_citation_meta()`](http://codecheck.org.uk/codecheck/reference/generate_cert_citation_meta.md).
+  Note that `citation_publisher`/`citation_technical_report_institution`
+  are `CODECHECK Initiative`, deliberately *not* the
+  `CODECHECK Community on Zenodo` that the Zenodo curation policy
+  prescribes for the record: that names one archived copy, while
+  certificates are also published on OSF and ResearchEquals.
+- Certificate pages describe themselves in their OpenGraph metadata
+  instead of the register as a whole: `og:title`, `og:url` and
+  `og:description` were hardcoded to “CODECHECK Register” and the
+  register’s own URL on every certificate page, and
+  `<meta name="author">` named the register editors rather than the
+  codecheckers. Certificate pages also gained `og:type`, an `og:image`
+  pointing at the rendered first page of the certificate, and a Twitter
+  card type. New internal
+  [`generate_cert_opengraph()`](http://codecheck.org.uk/codecheck/reference/generate_cert_opengraph.md).
+- The title shown for a certificate is now read from the platform it is
+  published on - Zenodo, OSF or ResearchEquals - rather than constructed
+  as “CODECHECK Certificate ”, since a module on ResearchEquals or a
+  project on OSF may be titled differently. It appears in
+  `citation_title`, `og:title`, the Schema.org `name` and the new
+  `certificate.title` field of the per-certificate `index.json`. New
+  internal
+  [`get_cert_record_title()`](http://codecheck.org.uk/codecheck/reference/get_cert_record_title.md)/[`resolve_cert_title()`](http://codecheck.org.uk/codecheck/reference/resolve_cert_title.md)
+  (`R/utils_cert_title.R`), whose platform dispatch mirrors
+  [`get_cert_link_uncached()`](http://codecheck.org.uk/codecheck/reference/get_cert_link_uncached.md).
+  The lookup is cached like the OpenAlex ID and abstract, and a platform
+  that could not be reached keeps the previously rendered title rather
+  than falling back to the constructed one.
+- A certificate’s Schema.org JSON-LD gained `publisher`, `inLanguage`,
+  the record DOI as `identifier`, and the register’s own copy of the
+  certificate PDF as `encoding`.
 - [`register_render()`](http://codecheck.org.uk/codecheck/reference/register_render.md)
   and
   [`register_render_cert()`](http://codecheck.org.uk/codecheck/reference/register_render_cert.md)
@@ -80,6 +124,12 @@
 
 ### Bug Fixes
 
+- Pages without Schema.org metadata of their own (the main register
+  page, venue and listing pages) no longer emit an empty
+  `<script type="application/ld+json"></script>`; they fall back to the
+  generic CODECHECK website metadata as intended. The page header
+  template switched its optional blocks on the values themselves, and
+  whisker treats the empty string as *true*.
 - A certificate’s OpenAlex ID and abstract are now looked up once per
   certificate instead of three times (once each for the markdown, JSON
   and Schema.org output), and a lookup that merely failed this render
@@ -133,6 +183,8 @@
   that existed identically in both `utils_download_certs.R` and
   `utils_render_cert_htmls.R`; whichever file R happened to load last
   silently won.
+- The `<meta name="generator">` tag now shows just
+  `codecheck <version>`, without the git commit hashes.
 
 ## codecheck 0.26.0
 
