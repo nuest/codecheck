@@ -11,7 +11,9 @@ create_cert_page_section_files(
   cert_id = NULL,
   cert_type = NULL,
   cert_venue = NULL,
-  repo_link = NULL
+  repo_link = NULL,
+  openalex_id = NULL,
+  abstract_data = NULL
 )
 ```
 

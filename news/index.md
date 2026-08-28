@@ -1,5 +1,139 @@
 # Changelog
 
+## codecheck 0.26.0.9000
+
+### New Features
+
+- Venue landing pages show a metadata panel (website, type, contact,
+  description, identifiers, logo, link to the venue’s own
+  `statistics.json`) sourced from new `venues.csv` columns; the venue
+  type moved out of the page title (register#84). The same metadata is
+  included in the venue’s JSON representation (register#183).
+  register.md carries it as YAML frontmatter instead of embedded HTML,
+  since register.md is a plain markdown/API export, not an HTML page.
+  The venue table’s `Report`/`Paper Title` column widths were also fixed
+  (Paper Title was previously the narrowest column despite carrying the
+  most content).
+- JSON/Markdown export links below register tables (venue, codechecker,
+  main register and listing pages) are now relative rather than absolute
+  `codecheck.org.uk` URLs, since those files always sit next to the page
+  linking to them; the GitHub CSV links are unaffected and stay
+  absolute.
+- Fixed the Zenodo DOI badge in the page footer: the badge’s raw URL was
+  rendering as visible link text next to the badge image.
+- New statistics dashboard page rendered at `docs/statistics/index.html`
+  (addresses register#33, register#48): a checks/codecheckers-over-time
+  chart with a secondary axis, a checks-by-platform chart, a
+  non-cumulative checks-per-year-by-venue-type bar chart, a venue grid
+  (grouped by actual venue type, with logo/link metadata and each
+  venue’s check year range from `venues.csv`/`register.csv`), and a
+  publisher summary table. Chart.js legends are interactive with a
+  pointer cursor and hover text. New
+  [`render_statistics_page()`](http://codecheck.org.uk/codecheck/reference/render_statistics_page.md),
+  called at the end of
+  [`register_render()`](http://codecheck.org.uk/codecheck/reference/register_render.md)
+  and
+  [`register_update_stats()`](http://codecheck.org.uk/codecheck/reference/register_update_stats.md).
+  `venues.csv` gained optional `logo_url`, `website_url`, `policy_url`
+  and `publisher` columns;
+  [`compute_annual_stats()`](http://codecheck.org.uk/codecheck/reference/compute_annual_stats.md)
+  gained `venues_detail`, `publishers` and `checks_per_type_per_year` in
+  `stats.json` for any venue with checks.
+- Certificates published on ResearchEquals are now audited against the
+  CODECHECK curation policy, including membership in the CODECHECK
+  collection
+  (<https://researchequals.com/collections/720ac28c-07a1-40c3-a098-c77443e5de96>)
+  for every certificate and in the Reproducible AGILE collection
+  (<https://researchequals.com/collections/aad8e6af-bd94-47f3-b215-c68d31687c74>)
+  for certificates of the AGILEGIS venue, each reported as its own
+  finding. New
+  [`researchequals_policy_check()`](http://codecheck.org.uk/codecheck/reference/researchequals_policy_check.md),
+  [`check_researchequals_record()`](http://codecheck.org.uk/codecheck/reference/check_researchequals_record.md)
+  for a single certificate, and
+  [`check_register_researchequals_policy()`](http://codecheck.org.uk/codecheck/reference/check_register_researchequals_policy.md)/[`report_researchequals_policy_findings()`](http://codecheck.org.uk/codecheck/reference/report_researchequals_policy_findings.md)
+  for a whole register.
+- [`register_render()`](http://codecheck.org.uk/codecheck/reference/register_render.md)
+  and
+  [`register_check()`](http://codecheck.org.uk/codecheck/reference/register_check.md)
+  gained `check_researchequals_policy` (default `TRUE`), the
+  ResearchEquals counterpart of `check_zenodo_policy`.
+- A “Go to random certificate” button (fixed bottom-right, dice icon) is
+  now rendered on the main register page (`docs/index.html`), letting
+  visitors jump to a random certificate instead of always starting at
+  the oldest one (register#188). Client-side only: `random-cert.js`
+  picks randomly among the certificate links already in the page’s
+  table. New `inst/extdata/js/random-cert.js`;
+  [`generate_html_postfix_hrefs_reg()`](http://codecheck.org.uk/codecheck/reference/generate_html_postfix_hrefs_reg.md)
+  gates it to the unfiltered register page only.
+- [`register_render()`](http://codecheck.org.uk/codecheck/reference/register_render.md)
+  and
+  [`register_render_cert()`](http://codecheck.org.uk/codecheck/reference/register_render_cert.md)
+  gained `prune_unavailable_metadata` (default `FALSE`): a certificate’s
+  OpenAlex ID or abstract is now only actually removed from the rendered
+  output when this run’s live lookup conclusively confirms it is no
+  longer available *and* this flag is set. By default, and always for a
+  lookup that merely failed (network error, rate limit), the previously
+  rendered value is kept instead. New internal
+  [`resolve_external_field()`](http://codecheck.org.uk/codecheck/reference/resolve_external_field.md)/[`read_previous_cert_field()`](http://codecheck.org.uk/codecheck/reference/read_previous_cert_field.md)
+  (`R/utils_enrichment_resolution.R`) fall back to the certificate’s
+  existing `index.json` when this run’s lookup is inconclusive.
+
+### Bug Fixes
+
+- A certificate’s OpenAlex ID and abstract are now looked up once per
+  certificate instead of three times (once each for the markdown, JSON
+  and Schema.org output), and a lookup that merely failed this render
+  (rate limit, network error) no longer silently drops the field from
+  the rendered output - see the `prune_unavailable_metadata` entry
+  above. Previously, a rate-limited full render could regress dozens of
+  certificates’ `index.json`/`index.html` at once even though the
+  underlying data was still available.
+- [`researchequals_policy_check()`](http://codecheck.org.uk/codecheck/reference/researchequals_policy_check.md)
+  reports a missing reference to the checked paper as a warning instead
+  of a failure: unlike Zenodo relations, ResearchEquals references
+  cannot be added after publication, so the reference has to be set when
+  the record is created (documented in the [codechecker
+  workflow](https://codecheck.org.uk/guide/community-workflow-codechecker)).
+- Certificates whose ResearchEquals main file is a document written in
+  that platform’s editor (`application/x-blocknote`) are downloaded
+  correctly again: such a document can *embed* the certificate PDF
+  rather than be it, and
+  [`get_researchequals_cert_link()`](http://codecheck.org.uk/codecheck/reference/get_researchequals_cert_link.md)
+  returned the document, so the JSON was saved as `cert.pdf` and could
+  not be converted (affects certificate 2026-014). New internal
+  [`researchequals_main_file()`](http://codecheck.org.uk/codecheck/reference/researchequals_main_file.md)
+  resolves the embedded PDF.
+- Codechecker pages’ Schema.org JSON-LD now actually includes each
+  certificate’s paper title and URL again.
+  [`render_html()`](http://codecheck.org.uk/codecheck/reference/render_html.md)
+  was handed the already column-filtered register table, which no longer
+  carries `Repository`, so every lookup silently failed with
+  `Unknown or uninitialised column: 'Repository'`.
+- [`render_cert_htmls()`](http://codecheck.org.uk/codecheck/reference/render_cert_htmls.md)
+  no longer emits a spurious `file("") only supports open = "w+"...`
+  warning on every render: it read a `cert_page_template` HTML template
+  that no longer ships with the package (the value was never used
+  afterward), and
+  [`system.file()`](https://rdrr.io/r/base/system.file.html) silently
+  returns `""` for a resource that doesn’t exist. Removed the dead read
+  and the stale `CONFIG$CERTS_DIR[["cert_page_template"]]` entry.
+- Poppler’s PDF parsing diagnostics (“PDF error: …”) are now captured
+  and classified instead of printing raw to the console -
+  [`convert_cert_pdf_to_png()`](http://codecheck.org.uk/codecheck/reference/convert_cert_pdf_to_png.md)
+  returns a structured status (`success`, `fatal`, `cosmetic_count`) so
+  a genuinely unparsable certificate PDF (e.g. a non-PDF file served
+  with a misleading content type) is reported once, clearly, with the
+  certificate ID and file path, while cosmetic poppler warnings
+  (e.g. malformed embedded fonts) are condensed to a single count. This
+  also fixes such issues going unreported under parallel rendering,
+  where a plain [`warning()`](https://rdrr.io/r/base/warning.html)
+  raised inside a forked worker never reached the coordinating process.
+- Removed a duplicate definition of
+  [`convert_cert_pdf_to_png()`](http://codecheck.org.uk/codecheck/reference/convert_cert_pdf_to_png.md)
+  that existed identically in both `utils_download_certs.R` and
+  `utils_render_cert_htmls.R`; whichever file R happened to load last
+  silently won.
+
 ## codecheck 0.26.0
 
 ### New Features
