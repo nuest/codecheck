@@ -1,6 +1,6 @@
 # Changelog
 
-## codecheck 0.26.0.9000
+## codecheck 0.26.0.9001
 
 ### New Features
 
@@ -121,9 +121,44 @@
   [`resolve_external_field()`](http://codecheck.org.uk/codecheck/reference/resolve_external_field.md)/[`read_previous_cert_field()`](http://codecheck.org.uk/codecheck/reference/read_previous_cert_field.md)
   (`R/utils_enrichment_resolution.R`) fall back to the certificate’s
   existing `index.json` when this run’s lookup is inconclusive.
+- A codechecker’s own page shows a `venue-metadata`-style panel: their
+  GitHub avatar (a plain `https://github.com/<handle>.png` image, no API
+  call needed), ORCID and GitHub profile as linked properties, and the
+  venues they’ve contributed checks to with per-venue type and count,
+  e.g. “conference AGILEGIS (17), journal J Geogr Syst (2)”
+  (register#74, register#189, register#83, register#75). The same
+  contributed-venues list, plus the codechecker’s name/ORCID/GitHub
+  username, is added to their `stats.json` as a `codechecker` field
+  (register#78). register.md carries the same information as YAML
+  frontmatter instead of embedded HTML, the same HTML-vs-plain-markdown
+  split as the venue metadata panel. New
+  [`generate_codechecker_metadata_html()`](http://codecheck.org.uk/codecheck/reference/generate_codechecker_metadata_html.md)/[`generate_codechecker_metadata_yaml()`](http://codecheck.org.uk/codecheck/reference/generate_codechecker_metadata_yaml.md)
+  (replacing `generate_codechecker_profile_links()`) and
+  [`get_codechecker_venues()`](http://codecheck.org.uk/codecheck/reference/get_codechecker_venues.md).
 
 ### Bug Fixes
 
+- Codechecker and venue pages’ Schema.org `Review` entities no longer
+  embed markdown link syntax in `@id`/`url`/`name`
+  (e.g. `".../certs/[2020-024](https://.../certs/2020-024/)/"`). Root
+  cause:
+  [`add_cert_links()`](http://codecheck.org.uk/codecheck/reference/add_cert_links.md)
+  used to rewrite `register_table$Certificate` into `"[id](url)"`
+  markdown in place, so every consumer other than the markdown table
+  renderer had to remember to strip it back out first - four call sites
+  did
+  ([`render_cert_htmls()`](http://codecheck.org.uk/codecheck/reference/render_cert_htmls.md),
+  [`check_register_zenodo_policy()`](http://codecheck.org.uk/codecheck/reference/check_register_zenodo_policy.md),
+  [`curate_register_zenodo_records()`](http://codecheck.org.uk/codecheck/reference/curate_register_zenodo_records.md),
+  [`check_register_researchequals_policy()`](http://codecheck.org.uk/codecheck/reference/check_register_researchequals_policy.md)),
+  and the two Schema.org generators didn’t.
+  [`add_cert_links()`](http://codecheck.org.uk/codecheck/reference/add_cert_links.md)
+  now leaves `Certificate` as the plain identifier; only
+  [`adjust_cert_links_relative()`](http://codecheck.org.uk/codecheck/reference/adjust_cert_links_relative.md)
+  (the one place that actually needs a markdown link, for the md/HTML
+  table) builds it, at render time, the same way `Report`/`Venue`/`Type`
+  links are already built. The four defensive strip-regexes are gone
+  along with the bug.
 - Pages without Schema.org metadata of their own (the main register
   page, venue and listing pages) no longer emit an empty
   `<script type="application/ld+json"></script>`; they fall back to the

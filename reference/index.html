@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">codecheck</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.26.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.26.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,7 +72,7 @@
           <code><a href="add_cert_links.html">add_cert_links()</a></code>
 
         </dt>
-        <dd>Function for adding clickable links to the paper for each entry in the register table and add certificate identifier and link as extra columns</dd>
+        <dd>Function for adding certificate identifier and link as extra columns</dd>
 
         <dt>
 
@@ -205,7 +205,7 @@
           <code><a href="adjust_cert_links_relative.html">adjust_cert_links_relative()</a></code>
 
         </dt>
-        <dd>Convert certificate links from absolute to relative paths based on page depth</dd>
+        <dd>Turn the plain Certificate column into a relative markdown link</dd>
 
         <dt>
 
@@ -629,10 +629,17 @@
 
         <dt>
 
-          <code><a href="generate_codechecker_profile_links.html">generate_codechecker_profile_links()</a></code>
+          <code><a href="generate_codechecker_metadata_html.html">generate_codechecker_metadata_html()</a></code>
 
         </dt>
-        <dd>Generate HTML for codechecker profile links</dd>
+        <dd>Generate the codechecker metadata HTML panel (avatar + ORCID + GitHub + venues)</dd>
+
+        <dt>
+
+          <code><a href="generate_codechecker_metadata_yaml.html">generate_codechecker_metadata_yaml()</a></code>
+
+        </dt>
+        <dd>Generate the codechecker metadata YAML frontmatter block for register.md</dd>
 
         <dt>
 
@@ -762,6 +769,13 @@
 
         <dt>
 
+          <code><a href="generate_venue_schema_org.html">generate_venue_schema_org()</a></code>
+
+        </dt>
+        <dd>Generate Schema.org JSON-LD for venue pages</dd>
+
+        <dt>
+
           <code><a href="get_abstract.html">get_abstract()</a></code>
 
         </dt>
@@ -885,6 +899,13 @@
 
         </dt>
         <dd>Get codechecker profile information by GitHub handle</dd>
+
+        <dt>
+
+          <code><a href="get_codechecker_venues.html">get_codechecker_venues()</a></code>
+
+        </dt>
+        <dd>Compute a codechecker's contributed venues, with per-venue check counts</dd>
 
         <dt>
 

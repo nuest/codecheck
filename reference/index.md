@@ -14,9 +14,7 @@
   : Add Hyperlinks to All Venues Table
 
 - [`add_cert_links()`](http://codecheck.org.uk/codecheck/reference/add_cert_links.md)
-  : Function for adding clickable links to the paper for each entry in
-  the register table and add certificate identifier and link as extra
-  columns
+  : Function for adding certificate identifier and link as extra columns
 
 - [`add_cert_pdf_links()`](http://codecheck.org.uk/codecheck/reference/add_cert_pdf_links.md)
   : Add certificate PDF download URLs to the register table
@@ -88,8 +86,7 @@
   : Add Hyperlinks to Venues Table
 
 - [`adjust_cert_links_relative()`](http://codecheck.org.uk/codecheck/reference/adjust_cert_links_relative.md)
-  : Convert certificate links from absolute to relative paths based on
-  page depth
+  : Turn the plain Certificate column into a relative markdown link
 
 - [`as_latex_url()`](http://codecheck.org.uk/codecheck/reference/as_latex_url.md)
   : Wrap URL for LaTeX
@@ -304,8 +301,13 @@
 - [`generate_certs_redirect()`](http://codecheck.org.uk/codecheck/reference/generate_certs_redirect.md)
   : Generate redirect page for /certs/ directory
 
-- [`generate_codechecker_profile_links()`](http://codecheck.org.uk/codecheck/reference/generate_codechecker_profile_links.md)
-  : Generate HTML for codechecker profile links
+- [`generate_codechecker_metadata_html()`](http://codecheck.org.uk/codecheck/reference/generate_codechecker_metadata_html.md)
+  : Generate the codechecker metadata HTML panel (avatar + ORCID +
+  GitHub + venues)
+
+- [`generate_codechecker_metadata_yaml()`](http://codecheck.org.uk/codecheck/reference/generate_codechecker_metadata_yaml.md)
+  : Generate the codechecker metadata YAML frontmatter block for
+  register.md
 
 - [`generate_codechecker_redirect()`](http://codecheck.org.uk/codecheck/reference/generate_codechecker_redirect.md)
   : Generate HTML redirect page for codechecker
@@ -368,6 +370,9 @@
 - [`generate_table_details_non_reg()`](http://codecheck.org.uk/codecheck/reference/generate_table_details_non_reg.md)
   : Generate Table Details for Non-Register Files
 
+- [`generate_venue_schema_org()`](http://codecheck.org.uk/codecheck/reference/generate_venue_schema_org.md)
+  : Generate Schema.org JSON-LD for venue pages
+
 - [`get_abstract()`](http://codecheck.org.uk/codecheck/reference/get_abstract.md)
   : Retrieves the abstract of a research paper from CrossRef or
   OpenAlex.
@@ -428,6 +433,10 @@
 
 - [`get_codechecker_profile_by_handle()`](http://codecheck.org.uk/codecheck/reference/get_codechecker_profile_by_handle.md)
   : Get codechecker profile information by GitHub handle
+
+- [`get_codechecker_venues()`](http://codecheck.org.uk/codecheck/reference/get_codechecker_venues.md)
+  : Compute a codechecker's contributed venues, with per-venue check
+  counts
 
 - [`get_codecheckers_data()`](http://codecheck.org.uk/codecheck/reference/get_codecheckers_data.md)
   : Fetch and cache codecheckers.csv data from GitHub
