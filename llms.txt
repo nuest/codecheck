@@ -301,7 +301,7 @@ under the MIT license, see file `LICENSE`.
   : Drop the cached policy metadata of one Zenodo record
 
 - [`codecheck_GET()`](http://codecheck.org.uk/codecheck/reference/codecheck_GET.md)
-  : Custom HTTP GET with proper User-Agent header
+  : Custom HTTP GET with proper User-Agent header and a bounded timeout
 
 - [`codecheck_GET_openalex()`](http://codecheck.org.uk/codecheck/reference/codecheck_GET_openalex.md)
   : GET an OpenAlex API URL with the configured API key and retries
@@ -815,8 +815,32 @@ under the MIT license, see file `LICENSE`.
 - [`validate_contents_references()`](http://codecheck.org.uk/codecheck/reference/validate_contents_references.md)
   : Validate codecheck.yml metadata against external references
 
+- [`validate_wikidata_model()`](http://codecheck.org.uk/codecheck/reference/validate_wikidata_model.md)
+  : Check the model's invariants
+
 - [`validate_yaml_syntax()`](http://codecheck.org.uk/codecheck/reference/validate_yaml_syntax.md)
   : Validate YAML syntax of a codecheck.yml file
+
+- [`wikidata_creates()`](http://codecheck.org.uk/codecheck/reference/wikidata_creates.md)
+  : Whether the export may create this kind of entity on a target
+
+- [`wikidata_endpoint()`](http://codecheck.org.uk/codecheck/reference/wikidata_endpoint.md)
+  : The SPARQL endpoint serving a kind of entity
+
+- [`wikidata_entity_kinds()`](http://codecheck.org.uk/codecheck/reference/wikidata_entity_kinds.md)
+  : The entity kinds of the model
+
+- [`wikidata_model()`](http://codecheck.org.uk/codecheck/reference/wikidata_model.md)
+  : The CODECHECK Wikidata model
+
+- [`wikidata_pending()`](http://codecheck.org.uk/codecheck/reference/wikidata_pending.md)
+  : The statements waiting on an item that does not exist yet
+
+- [`wikidata_properties()`](http://codecheck.org.uk/codecheck/reference/wikidata_properties.md)
+  : Every property the model uses, as a flat table
+
+- [`wikidata_statements()`](http://codecheck.org.uk/codecheck/reference/wikidata_statements.md)
+  : The statement definitions of one entity kind
 
 - [`write_meta_json()`](http://codecheck.org.uk/codecheck/reference/write_meta_json.md)
   : Write Build Metadata to JSON File

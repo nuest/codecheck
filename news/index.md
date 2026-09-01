@@ -1,8 +1,28 @@
 # Changelog
 
-## codecheck 0.26.0.9001
+## codecheck 0.27.0
 
 ### New Features
+
+- New data model for representing CODECHECK certificates as linked data,
+  in the CODECHECK Wikibase and in Wikidata (register#50).
+  `R/wikidata.R` holds only the model and its accessors, no HTTP or
+  QuickStatements. A certificate carries `P13046` *publication type of
+  scholarly work* so it resolves in the query service’s cross-graph
+  join, links to the checked paper via `P6977` *review of* rather than
+  `P2860`, and gets a venue-derived `P31` (AGILE reproducibility reviews
+  are typed separately from CODECHECKs). Only certificates are created
+  on Wikidata; papers, people and venues are resolved against existing
+  items and otherwise created only in the mirroring CODECHECK Wikibase.
+  New
+  [`wikidata_model()`](http://codecheck.org.uk/codecheck/reference/wikidata_model.md),
+  [`wikidata_entity_kinds()`](http://codecheck.org.uk/codecheck/reference/wikidata_entity_kinds.md),
+  [`wikidata_statements()`](http://codecheck.org.uk/codecheck/reference/wikidata_statements.md),
+  [`wikidata_properties()`](http://codecheck.org.uk/codecheck/reference/wikidata_properties.md),
+  [`wikidata_endpoint()`](http://codecheck.org.uk/codecheck/reference/wikidata_endpoint.md),
+  [`wikidata_creates()`](http://codecheck.org.uk/codecheck/reference/wikidata_creates.md),
+  [`validate_wikidata_model()`](http://codecheck.org.uk/codecheck/reference/validate_wikidata_model.md),
+  [`wikidata_pending()`](http://codecheck.org.uk/codecheck/reference/wikidata_pending.md).
 
 - Register, venue, person, and work tables gain click-to-sort column
   headers (vendored `stupidtable.js`); columns holding a link/title
@@ -23,26 +43,20 @@
   [`create_all_works_table()`](http://codecheck.org.uk/codecheck/reference/create_all_works_table.md).
 
 - New `/persons/<ORCID>/` landing page (register#123), replacing
-  `/codecheckers/`: covers both roles a person can have - paper author
-  and codechecker - showing “Works authored” and “Checks conducted” as
-  two separate tables (confirmed against a mockup on real register
-  data), with role counts in `stats.json` and a `Person` +
-  `Review`/`ScholarlyArticle` Schema.org graph. Only ORCID-identified
-  people get a page, matching
-  [\#123](https://github.com/codecheckers/codecheck/issues/123)’s
-  explicit decision not to attempt name matching. New
+  `/codecheckers/`: covers both roles a person can have, showing “Works
+  authored” and “Checks conducted” as two separate tables, with role
+  counts in `stats.json` and a `Person` + `Review`/`ScholarlyArticle`
+  Schema.org graph. Only ORCID-identified people get a page. New
   [`add_person_records()`](http://codecheck.org.uk/codecheck/reference/add_person_records.md),
   [`explode_person_records()`](http://codecheck.org.uk/codecheck/reference/explode_person_records.md),
   [`generate_person_metadata_html()`](http://codecheck.org.uk/codecheck/reference/generate_person_metadata_html.md),
   [`generate_person_schema_org()`](http://codecheck.org.uk/codecheck/reference/generate_person_schema_org.md),
   [`create_all_persons_table()`](http://codecheck.org.uk/codecheck/reference/create_all_persons_table.md).
-  `/codecheckers/` is removed by a full render (its own
-  `register.json`/`register.csv` files are no longer generated); a
-  `docs/404.html` (new
-  [`generate_404_page()`](http://codecheck.org.uk/codecheck/reference/generate_404_page.md))
+  A new `docs/404.html`
+  ([`generate_404_page()`](http://codecheck.org.uk/codecheck/reference/generate_404_page.md))
   redirects a stray `/codecheckers/<X>/` link to `/persons/<X>/` and,
   for an unmatched `/works/<DOI>`, explains that no CODECHECK has been
-  registered for that DOI rather than showing a generic error.
+  registered for that DOI.
 
 - [`register_render()`](http://codecheck.org.uk/codecheck/reference/register_render.md)’s
   default `filter_by` is now `c("venues", "works", "persons")` (was
@@ -65,16 +79,20 @@
 
 - `register.md` is no longer generated for a person page, since its two
   tables (works authored, checks conducted) can’t be represented as the
-  one markdown table every other filter’s `register.md` assumes; its
-  HTML footer accordingly shows no “Markdown” link. New
+  one markdown table every other filter’s `register.md` assumes. New
   `CONFIG$FILTERS_WITHOUT_MD`.
 
 - The “CSV source”/“CSV on GitHub” footer links (formerly “searchable
-  CSV”) now show only on the main, unfiltered register page - every
-  filtered detail page’s own CSV was a small subset of the same data
-  already in the table above it.
+  CSV”) now show only on the main, unfiltered register page.
 
-- `.navbar-menu .nav-link` font size reduced from `2rem` to `0.95rem`.
+- The top navigation menu is now shown on every page, not just overview
+  pages; each menu item and the logo gained hover text.
+
+- `.navbar-menu .nav-link` font size reduced from `2rem` to `0.95rem`
+  and its breadcrumb counterpart matched to it.
+
+- Added a ResearchEquals collection link to the page footer, next to the
+  Zenodo community link.
 
 - Venue landing pages show a metadata panel with website, contact,
   description, identifiers and logo, from new `venues.csv` columns
@@ -203,6 +221,21 @@
   content.
 - The `<meta name="generator">` tag now shows just
   `codecheck <version>`, without the git commit hashes.
+- A codechecker’s metadata panel no longer disappears entirely for an
+  author-only person with no codecheckers.csv entry; it now falls back
+  to showing their ORCID.
+- Fixed the navbar’s border colour being silently overridden by a later
+  shorthand `border-bottom` declaration at equal specificity, so it
+  never actually rendered green.
+- Breadcrumbs on a venue type overview page (e.g. `/venues/journals/`)
+  no longer collapse to a bare, unlinked “Venues”; they now show “Venues
+  \> Journals” like every other venue page.
+- [`render_register_json()`](http://codecheck.org.uk/codecheck/reference/render_register_json.md)
+  and
+  [`register_update_stats()`](http://codecheck.org.uk/codecheck/reference/register_update_stats.md)
+  no longer duplicate their venue/codechecker/work/person stats-building
+  logic, which could otherwise drift between a full render and a
+  stats-only update.
 
 ## codecheck 0.26.0
 

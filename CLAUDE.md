@@ -113,6 +113,14 @@ them under the release heading, regenerate `man/`, or touch
   leaves below the new heading into that heading’s own
   `## New Features`/`## Bug Fixes` (etc.) lists, then delete the
   now-empty dev headings.
+- Align the merged entries’ style, length, content and links with the
+  historic entries below them: one or two sentences per bullet (per
+  <https://style.tidyverse.org/news.html>, referenced in
+  `CONTRIBUTING.md`), not a multi-paragraph writeup accumulated over a
+  dev cycle - trim implementation narrative down to the user-facing
+  change, and match how existing entries cite an issue
+  (`(closes codecheckers/register#N)` / `(register#N)`) rather than a
+  bare `#N` or no reference at all.
 - Run `devtools::document()` so `man/` reflects the current code
   (roxygen doesn’t stamp the package version into `.Rd` files, but a
   stale `man/` from skipped `--no-docs` installs during iteration should
