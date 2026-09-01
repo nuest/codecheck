@@ -69,6 +69,11 @@
   : Function for adding repository links in the register table for the
   creation of the json file.
 
+- [`add_sortable_th_attributes()`](http://codecheck.org.uk/codecheck/reference/add_sortable_th_attributes.md)
+  : Adds data-sort hints to \<th\> cells so stupidtable.js (see
+  table-sort-init.js) knows which columns are sortable and how to
+  compare their values.
+
 - [`add_venue_hyperlinks_reg()`](http://codecheck.org.uk/codecheck/reference/add_venue_hyperlinks_reg.md)
   : Function for adding clickable links to the codecheck venue pages for
   each entry in the register table. Uses relative paths for HTML display
@@ -286,6 +291,9 @@
 - [`filter_and_drop_register_columns()`](http://codecheck.org.uk/codecheck/reference/filter_and_drop_register_columns.md)
   : Filter and Drop Columns from Register Table
 
+- [`generate_404_page()`](http://codecheck.org.uk/codecheck/reference/generate_404_page.md)
+  : Generate the register's 404 page
+
 - [`generate_breadcrumb()`](http://codecheck.org.uk/codecheck/reference/generate_breadcrumb.md)
   : Generate breadcrumb navigation HTML
 
@@ -358,6 +366,10 @@
 - [`generate_output_dir()`](http://codecheck.org.uk/codecheck/reference/generate_output_dir.md)
   : Generate Output Directory Path
 
+- [`generate_person_schema_org()`](http://codecheck.org.uk/codecheck/reference/generate_person_schema_org.md)
+  : Generate Schema.org JSON-LD for a person page
+  (codecheckers/register#123)
+
 - [`generate_robots_txt()`](http://codecheck.org.uk/codecheck/reference/generate_robots_txt.md)
   : Generate robots.txt for the register
 
@@ -372,6 +384,10 @@
 
 - [`generate_venue_schema_org()`](http://codecheck.org.uk/codecheck/reference/generate_venue_schema_org.md)
   : Generate Schema.org JSON-LD for venue pages
+
+- [`generate_work_schema_org()`](http://codecheck.org.uk/codecheck/reference/generate_work_schema_org.md)
+  : Generate Schema.org JSON-LD for a work page
+  (codecheckers/register#150)
 
 - [`get_abstract()`](http://codecheck.org.uk/codecheck/reference/get_abstract.md)
   : Retrieves the abstract of a research paper from CrossRef or
@@ -394,6 +410,9 @@
 - [`get_abstract_text_openalex_result()`](http://codecheck.org.uk/codecheck/reference/get_abstract_text_openalex_result.md)
   : Retrieves the abstract from OpenAlex and reports whether the API
   answered
+
+- [`get_agile_codecheckers_data()`](http://codecheck.org.uk/codecheck/reference/get_agile_codecheckers_data.md)
+  : Fetch and cache agile-codecheckers.csv data from GitHub
 
 - [`get_build_metadata()`](http://codecheck.org.uk/codecheck/reference/get_build_metadata.md)
   : Get Build Metadata
@@ -418,6 +437,9 @@
 
 - [`get_codecheck_yml_gitlab()`](http://codecheck.org.uk/codecheck/reference/get_codecheck_yml_gitlab.md)
   : Retrieve a codecheck.yml file from an GitLab.com project
+
+- [`get_codecheck_yml_or_null()`](http://codecheck.org.uk/codecheck/reference/get_codecheck_yml_or_null.md)
+  : Fetch a \`codecheck.yml\` without aborting the whole render
 
 - [`get_codecheck_yml_osf()`](http://codecheck.org.uk/codecheck/reference/get_codecheck_yml_osf.md)
   : Retrieve a codecheck.yml file from an OSF project
@@ -458,6 +480,9 @@
 
 - [`get_gitlab_readme_raw()`](http://codecheck.org.uk/codecheck/reference/get_gitlab_readme_raw.md)
   : Retrieve the README of a GitLab.com project, as raw text
+
+- [`get_institutional_codecheckers_data()`](http://codecheck.org.uk/codecheck/reference/get_institutional_codecheckers_data.md)
+  : Fetch and cache institutional-codecheckers.csv data from GitHub
 
 - [`get_lifecycle_metadata()`](http://codecheck.org.uk/codecheck/reference/get_lifecycle_metadata.md)
   : Retrieve metadata from Lifecycle Journal
