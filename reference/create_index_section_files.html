@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">codecheck</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.27.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.27.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,8 @@
 <span>  <span class="va">output_dir</span>,</span>
 <span>  <span class="va">filter</span>,</span>
 <span>  <span class="va">table_details</span>,</span>
-<span>  schema_org_jsonld <span class="op">=</span> <span class="st">""</span></span>
+<span>  schema_org_jsonld <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  signposting <span class="op">=</span> <span class="st">""</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -70,6 +71,11 @@
 
 <dt id="arg-schema-org-jsonld">schema_org_jsonld<a class="anchor" aria-label="anchor" href="#arg-schema-org-jsonld"></a></dt>
 <dd><p>Optional Schema.org JSON-LD string to include in header (default: "")</p></dd>
+
+
+<dt id="arg-signposting">signposting<a class="anchor" aria-label="anchor" href="#arg-signposting"></a></dt>
+<dd><p>Optional FAIR Signposting `&lt;link&gt;` elements for the page,
+see [generate_page_signposting()] (default: "")</p></dd>
 
 </dl></div>
 

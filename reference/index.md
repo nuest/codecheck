@@ -306,6 +306,9 @@
 - [`generate_cert_schema_org()`](http://codecheck.org.uk/codecheck/reference/generate_cert_schema_org.md)
   : Generate Schema.org JSON-LD for Certificate Page
 
+- [`generate_cert_signposting()`](http://codecheck.org.uk/codecheck/reference/generate_cert_signposting.md)
+  : Signposting links for a certificate page
+
 - [`generate_certs_redirect()`](http://codecheck.org.uk/codecheck/reference/generate_certs_redirect.md)
   : Generate redirect page for /certs/ directory
 
@@ -357,6 +360,9 @@
 - [`generate_html_title_non_registers()`](http://codecheck.org.uk/codecheck/reference/generate_html_title_non_registers.md)
   : Generate HTML Title for Non-Register Pages
 
+- [`generate_list_signposting()`](http://codecheck.org.uk/codecheck/reference/generate_list_signposting.md)
+  : Signposting links for a listing or overview page
+
 - [`generate_meta_generator_content()`](http://codecheck.org.uk/codecheck/reference/generate_meta_generator_content.md)
   : Generate Meta Generator Content
 
@@ -366,9 +372,15 @@
 - [`generate_output_dir()`](http://codecheck.org.uk/codecheck/reference/generate_output_dir.md)
   : Generate Output Directory Path
 
+- [`generate_page_signposting()`](http://codecheck.org.uk/codecheck/reference/generate_page_signposting.md)
+  : Signposting links for any non-certificate register page
+
 - [`generate_person_schema_org()`](http://codecheck.org.uk/codecheck/reference/generate_person_schema_org.md)
   : Generate Schema.org JSON-LD for a person page
   (codecheckers/register#123)
+
+- [`generate_person_signposting()`](http://codecheck.org.uk/codecheck/reference/generate_person_signposting.md)
+  : Signposting links for a person page
 
 - [`generate_robots_txt()`](http://codecheck.org.uk/codecheck/reference/generate_robots_txt.md)
   : Generate robots.txt for the register
@@ -385,9 +397,15 @@
 - [`generate_venue_schema_org()`](http://codecheck.org.uk/codecheck/reference/generate_venue_schema_org.md)
   : Generate Schema.org JSON-LD for venue pages
 
+- [`generate_venue_signposting()`](http://codecheck.org.uk/codecheck/reference/generate_venue_signposting.md)
+  : Signposting links for a venue page
+
 - [`generate_work_schema_org()`](http://codecheck.org.uk/codecheck/reference/generate_work_schema_org.md)
   : Generate Schema.org JSON-LD for a work page
   (codecheckers/register#150)
+
+- [`generate_work_signposting()`](http://codecheck.org.uk/codecheck/reference/generate_work_signposting.md)
+  : Signposting links for a work page
 
 - [`get_abstract()`](http://codecheck.org.uk/codecheck/reference/get_abstract.md)
   : Retrieves the abstract of a research paper from CrossRef or

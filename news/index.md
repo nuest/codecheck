@@ -1,5 +1,35 @@
 # Changelog
 
+## codecheck (development version)
+
+### New Features
+
+- Every rendered page carries [FAIR
+  Signposting](https://signposting.org/FAIR/) typed links (register#55).
+  Because GitHub Pages cannot set HTTP `Link` headers, the links are
+  expressed as HTML `<link>` elements in the page head, which is what
+  the profile prescribes for platforms without header control;
+  certificate pages are Level 1 conformant. Level 2 stays out of reach:
+  a link set has to be served as `application/linkset+json`, and GitHub
+  Pages derives media types from file extensions, for which none is
+  registered. A certificate page gets `cite-as` (its archived DOI, not
+  the checked paper’s), two `type` links, an `author` per ORCID-bearing
+  codechecker, `describedby`, `item` (the PDF) and `license`; a work
+  page gets the paper’s DOI as `cite-as`, a person page their ORCID, and
+  a venue page its Wikidata item where `venues.csv` records one. Listing
+  pages get `type`, `license` and `alternate` links, which is what
+  finally makes the JSON and CSV exports discoverable from the HTML. New
+  [`generate_cert_signposting()`](http://codecheck.org.uk/codecheck/reference/generate_cert_signposting.md),
+  [`generate_work_signposting()`](http://codecheck.org.uk/codecheck/reference/generate_work_signposting.md),
+  [`generate_person_signposting()`](http://codecheck.org.uk/codecheck/reference/generate_person_signposting.md),
+  [`generate_venue_signposting()`](http://codecheck.org.uk/codecheck/reference/generate_venue_signposting.md),
+  [`generate_list_signposting()`](http://codecheck.org.uk/codecheck/reference/generate_list_signposting.md),
+  [`generate_page_signposting()`](http://codecheck.org.uk/codecheck/reference/generate_page_signposting.md).
+- Pages with Schema.org metadata now also write it to an `index.jsonld`
+  next to the page, so the signposting `describedby` links resolve to a
+  machine-readable document rather than to a page a harvester has to
+  scrape. GitHub Pages serves `.jsonld` as `application/ld+json`.
+
 ## codecheck 0.27.1
 
 ### Bug Fixes
@@ -27,10 +57,12 @@
   scholarly work* so it resolves in the query service’s cross-graph
   join, links to the checked paper via `P6977` *review of* rather than
   `P2860`, and gets a venue-derived `P31` (AGILE reproducibility reviews
-  are typed separately from CODECHECKs). Only certificates are created
-  on Wikidata; papers, people and venues are resolved against existing
-  items and otherwise created only in the mirroring CODECHECK Wikibase.
-  New
+  are typed separately from CODECHECKs). A checked work whose venue is
+  `preprint` is typed Q580922 *preprint* rather than *scholarly
+  article*; both values keep it in the scholarly graph beside its
+  certificate. Only certificates are created on Wikidata; papers, people
+  and venues are resolved against existing items and otherwise created
+  only in the mirroring CODECHECK Wikibase. New
   [`wikidata_model()`](http://codecheck.org.uk/codecheck/reference/wikidata_model.md),
   [`wikidata_entity_kinds()`](http://codecheck.org.uk/codecheck/reference/wikidata_entity_kinds.md),
   [`wikidata_statements()`](http://codecheck.org.uk/codecheck/reference/wikidata_statements.md),
