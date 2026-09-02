@@ -96,6 +96,9 @@
 - [`as_latex_url()`](http://codecheck.org.uk/codecheck/reference/as_latex_url.md)
   : Wrap URL for LaTeX
 
+- [`bootstrap_wikibase()`](http://codecheck.org.uk/codecheck/reference/bootstrap_wikibase.md)
+  : Build the CODECHECK Wikibase from the model
+
 - [`cached_lookup()`](http://codecheck.org.uk/codecheck/reference/cached_lookup.md)
   : Cache the result of a metadata lookup on disk, but only when
   conclusive
@@ -575,6 +578,9 @@
 - [`load_venues_config()`](http://codecheck.org.uk/codecheck/reference/load_venues_config.md)
   : Load venues configuration from CSV file
 
+- [`load_wikibase_register()`](http://codecheck.org.uk/codecheck/reference/load_wikibase_register.md)
+  : Load the register into the CODECHECK Wikibase
+
 - [`normalize_person_lists()`](http://codecheck.org.uk/codecheck/reference/normalize_person_lists.md)
   : Normalize person fields of a codecheck.yml to lists of persons
 
@@ -583,6 +589,9 @@
 
 - [`openalex_url_with_key()`](http://codecheck.org.uk/codecheck/reference/openalex_url_with_key.md)
   : Add the OpenAlex API key to a request URL
+
+- [`orcid_rors()`](http://codecheck.org.uk/codecheck/reference/orcid_rors.md)
+  : The RORs a person's ORCID profile asserts
 
 - [`parse_repository_spec()`](http://codecheck.org.uk/codecheck/reference/parse_repository_spec.md)
   : Parse the repository specification in the column "Repo" in the
@@ -595,6 +604,12 @@
 - [`prune_libs()`](http://codecheck.org.uk/codecheck/reference/prune_libs.md)
   : Prune Unreferenced Library Directories
 
+- [`quickstatements_submitted()`](http://codecheck.org.uk/codecheck/reference/quickstatements_submitted.md)
+  : Record that a QuickStatements batch was actually submitted
+
+- [`quickstatements_write()`](http://codecheck.org.uk/codecheck/reference/quickstatements_write.md)
+  : Write a QuickStatements batch out for somebody to paste
+
 - [`register_check()`](http://codecheck.org.uk/codecheck/reference/register_check.md)
   : Function for checking all entries in the register
 
@@ -606,6 +621,9 @@
 
 - [`register_render_cert()`](http://codecheck.org.uk/codecheck/reference/register_render_cert.md)
   : Render a single certificate page by its ID
+
+- [`register_ror_coverage()`](http://codecheck.org.uk/codecheck/reference/register_ror_coverage.md)
+  : How many register persons have a ROR in their ORCID profile
 
 - [`register_update_stats()`](http://codecheck.org.uk/codecheck/reference/register_update_stats.md)
   : Regenerate all statistics files from existing register.json files
@@ -658,6 +676,9 @@
 
 - [`resolve_zenodo_record_id()`](http://codecheck.org.uk/codecheck/reference/resolve_zenodo_record_id.md)
   : Resolve a certificate ID or Zenodo reference to a Zenodo record ID
+
+- [`ror_coverage_summary()`](http://codecheck.org.uk/codecheck/reference/ror_coverage_summary.md)
+  : Summarise ROR coverage over the register
 
 - [`set_paper_title_references()`](http://codecheck.org.uk/codecheck/reference/set_paper_title_references.md)
   : Set "Title" and "Paper reference" columns and values to the

@@ -80,6 +80,15 @@ A venue without a Wikidata item simply gets no `cite-as`.</p>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>HTML string of `&lt;link&gt;` elements, one per line</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Some rows of `venues.csv` are not venues but publication states - "preprint",
+"in press" - and their `wikidata` value is a class item the Wikidata data
+model types checked works with (Q580922, "preprint"), not an identifier of
+the venue. Those get no `cite-as` either: `cite-as` states the PID *of the
+thing the page is about*, and a class shared across the register is not it.
+They are recognised by looking the value up in [WIKIDATA_ITEMS].</p>
+    </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

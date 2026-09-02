@@ -31,3 +31,13 @@ generate_venue_signposting(venue_name, venue_type, has_jsonld = FALSE)
 ## Value
 
 HTML string of \`\<link\>\` elements, one per line
+
+## Details
+
+Some rows of \`venues.csv\` are not venues but publication states -
+"preprint", "in press" - and their \`wikidata\` value is a class item
+the Wikidata data model types checked works with (Q580922, "preprint"),
+not an identifier of the venue. Those get no \`cite-as\` either:
+\`cite-as\` states the PID \*of the thing the page is about\*, and a
+class shared across the register is not it. They are recognised by
+looking the value up in \[WIKIDATA_ITEMS\].
