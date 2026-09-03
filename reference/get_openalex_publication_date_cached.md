@@ -1,6 +1,9 @@
-# Cached version of \[get_openalex_publication_date_result()\]
+# A work's publication date, from its OpenAlex record
 
-Cached version of \[get_openalex_publication_date_result()\]
+Delegates to \[get_openalex_work_fields_cached_result()\], which reads
+the same record for the ISSN of the publication the work appeared in
+(register#50). One request and one cache entry per work, rather than two
+of each for two fields of the same document.
 
 ## Usage
 

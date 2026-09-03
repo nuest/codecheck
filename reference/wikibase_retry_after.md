@@ -18,7 +18,7 @@ wikibase_retry_after(result, response = NULL, attempt = 1)
 
 - result:
 
-  the parsed API response, or \`NULL\`
+  the parsed API response, an error condition, or \`NULL\`
 
 - response:
 

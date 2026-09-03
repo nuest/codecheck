@@ -13,6 +13,7 @@ register_render(
   outputs = c("html", "md", "json"),
   config = c(system.file("extdata", "config.R", package = "codecheck")),
   venues_file = "venues.csv",
+  persons_file = "persons.csv",
   codecheck_repo_path = NULL,
   from = 1,
   to = nrow(register),
@@ -48,6 +49,12 @@ register_render(
 - venues_file:
 
   Path to the venues.csv file containing venue names and labels
+
+- persons_file:
+
+  Path to a CSV with \`orcid\` and \`wikidata\` columns, the register's
+  lookup of the people it knows Wikidata items for. Optional: a missing
+  file is ignored.
 
 - codecheck_repo_path:
 

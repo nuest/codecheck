@@ -6,7 +6,14 @@ the retry rule and the JSON parsing are decided once.
 ## Usage
 
 ``` r
-wikibase_request(method, params, handle = NULL, what = "the API", attempts = 4)
+wikibase_request(
+  method,
+  params,
+  handle = NULL,
+  what = "the API",
+  attempts = 4,
+  api = WIKIBASE_INSTANCE$api
+)
 ```
 
 ## Arguments
@@ -30,6 +37,10 @@ wikibase_request(method, params, handle = NULL, what = "the API", attempts = 4)
 - attempts:
 
   how many times to try in total
+
+- api:
+
+  the Action API to address, the CODECHECK Wikibase by default
 
 ## Value
 

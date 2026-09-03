@@ -5,7 +5,7 @@ A read-only Action API request
 ## Usage
 
 ``` r
-wikibase_get(handle, params)
+wikibase_get(handle, params, api = WIKIBASE_INSTANCE$api)
 ```
 
 ## Arguments
@@ -17,6 +17,10 @@ wikibase_get(handle, params)
 - params:
 
   the query parameters, \`format = "json"\` is added
+
+- api:
+
+  the Action API to read from, the CODECHECK Wikibase by default
 
 ## Value
 

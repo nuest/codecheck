@@ -41,6 +41,9 @@
 - [`add_openalex_ids()`](http://codecheck.org.uk/codecheck/reference/add_openalex_ids.md)
   : Add OpenAlex work IDs to the register table (addresses register#185)
 
+- [`add_openalex_work_fields()`](http://codecheck.org.uk/codecheck/reference/add_openalex_work_fields.md)
+  : Add the publication facts behind each OpenAlex ID (register#50)
+
 - [`add_paper_details_md()`](http://codecheck.org.uk/codecheck/reference/add_paper_details_md.md)
   : Populates an existing markdown content template with details about
   the codechecked paper.
@@ -601,6 +604,9 @@
   : Function for preprocessing the register to create and return the
   preprocessed register table.
 
+- [`preview_wikidata_export()`](http://codecheck.org.uk/codecheck/reference/preview_wikidata_export.md)
+  : Preview the export to Wikidata
+
 - [`prune_libs()`](http://codecheck.org.uk/codecheck/reference/prune_libs.md)
   : Prune Unreferenced Library Directories
 
@@ -732,6 +738,9 @@
 
 - [`validate_yaml_syntax()`](http://codecheck.org.uk/codecheck/reference/validate_yaml_syntax.md)
   : Validate YAML syntax of a codecheck.yml file
+
+- [`verify_wikidata_export()`](http://codecheck.org.uk/codecheck/reference/verify_wikidata_export.md)
+  : Check what actually arrived on Wikidata
 
 - [`wikidata_creates()`](http://codecheck.org.uk/codecheck/reference/wikidata_creates.md)
   : Whether the export may create this kind of entity on a target
