@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">codecheck</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.28.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.28.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,14 @@
       <small>Source: <a href="https://github.com/codecheckers/codecheck/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.28.0.9000" id="codecheck-02809000">codecheck 0.28.0.9000<a class="anchor" aria-label="anchor" href="#codecheck-02809000"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-28-0-9000">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-28-0-9000"></a></h3>
+<ul><li>
+<code><a href="../reference/register_render.html">register_render()</a></code> keeps a register repo’s <code>.zenodo.json</code> contributors current with every codechecker named in the register (register#58), crediting people whose work otherwise only appears on their own person page. New <code><a href="../reference/build_zenodo_contributors.html">build_zenodo_contributors()</a></code> and <code><a href="../reference/update_zenodo_json.html">update_zenodo_json()</a></code>. Zenodo’s contributor vocabulary has no “reviewer”/“checker” term, so every entry is typed <code>"Other"</code>; a <code>.zenodo.json</code> that does not exist is left alone. Only the <code>contributors</code> array is touched - the rest of the file (title, creators, licence, …) stays hand-maintained.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.28.0" id="codecheck-0280">codecheck 0.28.0<a class="anchor" aria-label="anchor" href="#codecheck-0280"></a></h2>
 <div class="section level3">
@@ -84,7 +92,11 @@
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-0-28-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-28-0"></a></h3>
-<ul><li>A work landing page shows its OpenAlex ID again: the column was missing from the work pages’ HTML column list, so the metadata panel’s OpenAlex row never rendered even though <code>index.json</code> carried the ID.</li>
+<ul><li>
+<code><a href="../reference/curate_zenodo_record.html">curate_zenodo_record()</a></code> follows a record that Zenodo has superseded with a new version instead of failing with “Not found”: the register stores the report DOI as it was published, and the id in it stops being the editable one once a new version exists (certificate 2023-011).</li>
+<li>
+<code><a href="../reference/curate_register_zenodo_records.html">curate_register_zenodo_records()</a></code> reports records deposited by another Zenodo account as their own category rather than as errors, and names the certificates concerned - the corrections for those are known and correct, they just have to be made by whoever owns the record.</li>
+<li>A work landing page shows its OpenAlex ID again: the column was missing from the work pages’ HTML column list, so the metadata panel’s OpenAlex row never rendered even though <code>index.json</code> carried the ID.</li>
 <li>
 <code><a href="../reference/register_check.html">register_check()</a></code> warns when two certificates share a report DOI. The register renders both without trouble, so it is invisible there, but the report DOI identifies a certificate in the Wikidata export, where two certificates naming one archived record become a single item and the second silently overwrites the first. New <code><a href="../reference/check_duplicate_reports.html">check_duplicate_reports()</a></code>.</li>
 <li>

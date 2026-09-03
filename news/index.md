@@ -1,5 +1,21 @@
 # Changelog
 
+## codecheck 0.28.0.9000
+
+### New Features
+
+- [`register_render()`](http://codecheck.org.uk/codecheck/reference/register_render.md)
+  keeps a register repo’s `.zenodo.json` contributors current with every
+  codechecker named in the register (register#58), crediting people
+  whose work otherwise only appears on their own person page. New
+  [`build_zenodo_contributors()`](http://codecheck.org.uk/codecheck/reference/build_zenodo_contributors.md)
+  and
+  [`update_zenodo_json()`](http://codecheck.org.uk/codecheck/reference/update_zenodo_json.md).
+  Zenodo’s contributor vocabulary has no “reviewer”/“checker” term, so
+  every entry is typed `"Other"`; a `.zenodo.json` that does not exist
+  is left alone. Only the `contributors` array is touched - the rest of
+  the file (title, creators, licence, …) stays hand-maintained.
+
 ## codecheck 0.28.0
 
 ### New Features
@@ -164,6 +180,16 @@
 
 ### Bug Fixes
 
+- [`curate_zenodo_record()`](http://codecheck.org.uk/codecheck/reference/curate_zenodo_record.md)
+  follows a record that Zenodo has superseded with a new version instead
+  of failing with “Not found”: the register stores the report DOI as it
+  was published, and the id in it stops being the editable one once a
+  new version exists (certificate 2023-011).
+- [`curate_register_zenodo_records()`](http://codecheck.org.uk/codecheck/reference/curate_register_zenodo_records.md)
+  reports records deposited by another Zenodo account as their own
+  category rather than as errors, and names the certificates concerned -
+  the corrections for those are known and correct, they just have to be
+  made by whoever owns the record.
 - A work landing page shows its OpenAlex ID again: the column was
   missing from the work pages’ HTML column list, so the metadata panel’s
   OpenAlex row never rendered even though `index.json` carried the ID.

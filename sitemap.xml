@@ -27,6 +27,7 @@
 <url><loc>http://codecheck.org.uk/codecheck/reference/WIKIDATA_PLATFORMS.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/WIKIDATA_REFERENCE.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/WIKIDATA_REGISTER_COLUMN.html</loc></url>
+<url><loc>http://codecheck.org.uk/codecheck/reference/ZENODO_NON_PERSON_CODECHECKERS.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/add_abstract.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/add_all_codecheckers_hyperlink.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/add_all_organisations_hyperlink.html</loc></url>
@@ -69,6 +70,7 @@
 <url><loc>http://codecheck.org.uk/codecheck/reference/build_statistics_content_html.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/build_venue_stats_field.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/build_work_stats_field.html</loc></url>
+<url><loc>http://codecheck.org.uk/codecheck/reference/build_zenodo_contributors.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/cached_lookup.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/cached_lookup_result.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/calculate_breadcrumb_base_path.html</loc></url>
@@ -377,6 +379,7 @@
 <url><loc>http://codecheck.org.uk/codecheck/reference/update_certificate_from_github.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/update_codecheck_yml_from_lifecycle.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/update_register_wikidata.html</loc></url>
+<url><loc>http://codecheck.org.uk/codecheck/reference/update_zenodo_json.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/upload_zenodo_certificate.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/upload_zenodo_metadata.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/validate_certificate_for_rendering.html</loc></url>
@@ -443,7 +446,9 @@
 <url><loc>http://codecheck.org.uk/codecheck/reference/write_wikibase_policy_pages.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/write_wikibase_report.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/write_wikidata_preview_page.html</loc></url>
+<url><loc>http://codecheck.org.uk/codecheck/reference/zenodo_current_record_id.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/zenodo_policy_check.html</loc></url>
 <url><loc>http://codecheck.org.uk/codecheck/reference/zenodo_record.html</loc></url>
+<url><loc>http://codecheck.org.uk/codecheck/reference/zenodo_version_doi_message.html</loc></url>
 </urlset>
 
