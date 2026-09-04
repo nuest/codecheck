@@ -4,6 +4,79 @@
 
 ### New Features
 
+- The sort state of the register tables is now reflected in the page
+  URL, so a particular view can be linked, bookmarked or cited:
+  `?sort=-check-date` is the register sorted by check date, newest first
+  (a leading `-` means descending, the column name is the header text
+  slugified). A page with more than one sortable table numbers them in
+  document order, `sort`, `sort2`, …, e.g. a person page as
+  `?sort=venue&sort2=-check-date`. The sort is applied on load and the
+  URL updated on every header click via `history.replaceState()`, so the
+  back button is unaffected; an unknown or unsortable column name is
+  ignored and leaves the default order. Entirely in
+  `inst/extdata/js/table-sort-init.js`, which is all a static GitHub
+  Pages site needs.
+- The statistics dashboard now shows the spread of time between a work’s
+  publication and its CODECHECK certificate: a bucketed histogram and a
+  per-certificate beeswarm plot (each dot linking to its certificate
+  page), plus a summary line, computed by
+  [`compute_annual_stats()`](http://codecheck.org.uk/codecheck/reference/compute_annual_stats.md)
+  from the existing `Work publication date`/`Check date` columns.
+  Deliberately framed as a distribution rather than a speed metric -
+  checking a decades-old work is as notable as a fast turnaround.
+- [`add_openalex_work_fields()`](http://codecheck.org.uk/codecheck/reference/add_openalex_work_fields.md)
+  now falls back to reading a work’s publication date straight off its
+  own reference URL when OpenAlex has no record for it at all:
+  `citation_online_date`/`citation_publication_date`/`citation_date`
+  HTML meta tags, schema.org `datePublished` JSON-LD, or - for a
+  reference that is itself a PDF - the PDF’s own `Created` metadata via
+  [`pdftools::pdf_info()`](https://docs.ropensci.org/pdftools//reference/pdftools.html).
+  New
+  [`get_page_publication_date_result()`](http://codecheck.org.uk/codecheck/reference/get_page_publication_date_result.md)
+  and helpers in `R/utils_paper_publication_date.R`. A partial date (a
+  bare year, or year+month) is resolved to its calendar midpoint rather
+  than the 1st, so it does not skew interval calculations toward “early
+  in the period”. `xml2` moves from Suggests to Imports.
+- A render now warns when a certificate’s `paper.reference` is a plain
+  (non-archived) PDF link: such links carry no machine-readable
+  publication metadata and are prone to rotting (two of the CMMID
+  COVID-19 reports already 404). New
+  [`warn_if_pdf_reference()`](http://codecheck.org.uk/codecheck/reference/warn_if_pdf_reference.md),
+  called from
+  [`add_openalex_ids()`](http://codecheck.org.uk/codecheck/reference/add_openalex_ids.md);
+  suggests a web.archive.org snapshot instead, matching the guidance
+  added to the community workflow config spec.
+- A certificate’s “Paper details” box now shows its
+  `Work publication date` (when known) below the abstract, and a work’s
+  own landing page shows it in the metadata panel directly below the
+  DOI. `Work publication date` joins the columns carried through to a
+  work page for
+  [`generate_work_metadata_html()`](http://codecheck.org.uk/codecheck/reference/generate_work_metadata_html.md)
+  (`CONFIG$REGISTER_COLUMNS$works$html`), same as `OpenAlex` already
+  was.
+- [`preview_wikidata_export()`](http://codecheck.org.uk/codecheck/reference/preview_wikidata_export.md)
+  splits a batch that would create more items than Wikidata’s rate limit
+  allows per minute into numbered files to paste in turn (register#50).
+  A background QuickStatements run pushes as fast as the API accepts, so
+  a larger batch stopped at the limit and reported the rest as “No
+  success flag set in API result”.
+- [`quickstatements_submitted()`](http://codecheck.org.uk/codecheck/reference/quickstatements_submitted.md)
+  retires the `.qs` file a batch was pasted from, renaming it with a
+  `.submitted` suffix, and
+  [`preview_wikidata_export()`](http://codecheck.org.uk/codecheck/reference/preview_wikidata_export.md)
+  removes a batch file once nothing is left to create (register#50).
+  QuickStatements’ `CREATE` is not idempotent, so a batch file left
+  lying around after its run is one paste away from duplicating every
+  item in it.
+- [`preview_wikidata_export()`](http://codecheck.org.uk/codecheck/reference/preview_wikidata_export.md)
+  no longer tells you to run the works batch first when there is no
+  works batch to run: certificates left without a `review of` statement
+  once every resolvable work exists name a checked work that has no DOI
+  (register#50).
+- [`preview_wikidata_export()`](http://codecheck.org.uk/codecheck/reference/preview_wikidata_export.md)
+  writes the checked works to `wikidata-works.qs` rather than
+  `wikidata-papers.qs`, matching the noun the register uses everywhere
+  else (register#50).
 - [`register_render()`](http://codecheck.org.uk/codecheck/reference/register_render.md)
   keeps a register repo’s `.zenodo.json` contributors current with every
   codechecker named in the register (register#58), crediting people
@@ -87,7 +160,7 @@
   authors as `P2093` author name strings (register#50).
 - Enriching a work with its OpenAlex ID now also fetches the publication
   it appeared in and its publication date, as new `Paper ISSN` and
-  `Paper publication date` columns in `register.json`, so an exported
+  `Work publication date` columns in `register.json`, so an exported
   work states `P1433` published in and `P577` publication date
   (register#50). New
   [`add_openalex_work_fields()`](http://codecheck.org.uk/codecheck/reference/add_openalex_work_fields.md).
@@ -98,7 +171,7 @@
   statements had no target (register#50). Wikidata is unaffected:
   publications are resolved there, never created.
 - `register.json` and `register-full.json` carry each checked work’s
-  `Paper ISSN`, `Paper venue` and `Paper publication date`, and the
+  `Paper ISSN`, `Paper venue` and `Work publication date`, and the
   Wikidata export backfills them from cache when the register was
   rendered before those columns existed (register#50).
 - New
