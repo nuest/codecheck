@@ -40,6 +40,16 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="codecheck-development-version">codecheck (development version)<a class="anchor" aria-label="anchor" href="#codecheck-development-version"></a></h2>
+<div class="section level3">
+<h3 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<ul><li>
+<code><a href="../reference/register_clear_cache.html">register_clear_cache()</a></code> takes certificate identifiers to refresh only what is cached about those certificates, keeping the rest of the cache (<code>make clean_cert CERT_ID=...</code> in the register).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-development-version">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
+<ul><li>Rule <code>CC-MET-001</code> orcid-format now also checks an ORCID’s check digit, so a mistyped ORCID is caught before it is looked up (register#209).</li>
+<li>Rule <code>CC-MET-003</code> orcid-name-match no longer reports a name as different from its ORCID record only because of diacritics, e.g. Grišiūtė and Grisiute (register#209).</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.30.0" id="codecheck-0300">codecheck 0.30.0<a class="anchor" aria-label="anchor" href="#codecheck-0300"></a></h2>

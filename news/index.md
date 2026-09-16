@@ -2,6 +2,21 @@
 
 ## codecheck (development version)
 
+### New Features
+
+- [`register_clear_cache()`](http://codecheck.org.uk/codecheck/reference/register_clear_cache.md)
+  takes certificate identifiers to refresh only what is cached about
+  those certificates, keeping the rest of the cache
+  (`make clean_cert CERT_ID=...` in the register).
+
+### Bug Fixes
+
+- Rule `CC-MET-001` orcid-format now also checks an ORCID’s check digit,
+  so a mistyped ORCID is caught before it is looked up (register#209).
+- Rule `CC-MET-003` orcid-name-match no longer reports a name as
+  different from its ORCID record only because of diacritics,
+  e.g. Grišiūtė and Grisiute (register#209).
+
 ## codecheck 0.30.0
 
 ### New Features
